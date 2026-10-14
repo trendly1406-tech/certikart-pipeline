@@ -37,7 +37,6 @@ flowchart TD
         AutoLink --> PG_Listings[(retailer_products - Store Listings)]
         AutoLink --> PG_Offers[(offers - Live Price in Integer Paise)]
         AutoLink --> PG_Identifiers[(product_identifiers - ASIN, MPN, GTIN, EAN)]
-        AutoLink --> PG_Runs[(scrape_runs - Observability Telemetry)]
     end
 ```
 
@@ -47,7 +46,7 @@ flowchart TD
   - `retailer_products`: Store-specific product pages with lifecycle tracking and data quality scores.
   - `offers`: Live commercial state (price in integer paise, MRP, coupon discount, seller, stock, ratings).
   - `product_identifiers`: Normalized external hardware identifiers (`ASIN`, `MPN`, `GTIN`, `EAN`) with unique index `(identifier_type, identifier_value)`.
-  - `scrape_runs`: Telemetry logs for crawl execution, duration latency, and parser health.
+  - Scheduled crawl telemetry is emitted through structured logs and collection reports; interactive imports use `product_import_runs` for durable progress.
 - **Domain Identity Normalizers & Pydantic Schemas**:
   - `LaptopIdentityNormalizer` / `LaptopAttributes`: Processor extraction (M1–M5 Pro/Max, A18 Pro, Intel Core Ultra, AMD Ryzen AI, Snapdragon X, MediaTek), RAM type (Unified Memory, LPDDR5X, DDR5), display panel (Liquid Retina XDR, OLED, 4K UHD), GPU VRAM, backlight, and battery Wh.
   - `MobileIdentityNormalizer` / `MobileAttributes`: Families (iPhone 11–19, Galaxy S20–S26, Redmi, Realme, Poco, Vivo, iQOO), display protection (Ceramic Shield, Gorilla Glass Victus 2), resolution (Super Retina XDR, QHD+, 1.5K, FHD+), camera MP/OIS, battery mAh, and fast charging wattage.

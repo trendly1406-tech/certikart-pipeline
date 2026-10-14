@@ -72,7 +72,8 @@ def test_flipkart_parser_extracts_all_fields_from_html() -> None:
     # Verify conversions
     fp = parsed.to_fingerprint()
     assert fp.brand == "lenovo"
-    assert fp.attributes["ram_gb"] == 16
+    assert fp.ram_gb == 16
+    assert "ram_gb" not in fp.attributes
 
     obs = parsed.to_price_observation()
     assert obs.price_paise == 4999000
@@ -101,6 +102,21 @@ def test_flipkart_parser_detects_out_of_stock() -> None:
     assert parsed.brand == "Apple"
     assert parsed.in_stock is False
     assert parsed.price_paise == 8990000
+
+
+def test_flipkart_parser_promotes_part_number_from_title() -> None:
+    parsed = parse_flipkart_payload(
+        payload={
+            "title": "Apple MacBook Air M5 16 GB 1 TB MDVT4HN/A",
+            "price_paise": 21_590_000,
+        },
+        source_url=AnyHttpUrl("https://www.flipkart.com/apple/p/itmM5AIR001"),
+        source_product_id="itmM5AIR001",
+        observed_at=datetime.now(UTC),
+    )
+
+    assert parsed.manufacturer_part_number == "MDVT4HN/A"
+    assert parsed.to_fingerprint().manufacturer_part_number == "mdvt4hn/a"
 
 
 def test_flipkart_adapter_parse_method() -> None:
@@ -508,26 +524,31 @@ def test_flipkart_parser_modern_specifications_tab() -> None:
     assert parsed.rating == 4.6
     assert parsed.review_count == 18
 
-    # Check extracted specs and normalized attributes
-    assert parsed.attributes["processor brand"] == "Intel"
-    assert parsed.attributes["processor name"] == "Core Ultra 7"
-    assert parsed.attributes["processor variant"] == "155H"
+    # Canonical attributes stay at the root; retailer fields live once in sections.
+    raw_sections = parsed.attributes["spec_sections"]
+    assert isinstance(raw_sections, dict)
+    section_specs = {
+        key.casefold(): value for values in raw_sections.values() for key, value in values.items()
+    }
+    assert section_specs["processor brand"] == "Intel"
+    assert section_specs["processor name"] == "Core Ultra 7"
+    assert section_specs["processor variant"] == "155H"
     assert parsed.attributes["cpu_model"] == "Intel Core Ultra 7 155H"
 
-    assert parsed.attributes["ram"] == "16 GB"
+    assert section_specs["ram"] == "16 GB"
     assert parsed.attributes["ram_gb"] == 16
     assert parsed.attributes["ram_type"] == "DDR5"
 
-    assert parsed.attributes["ssd capacity"] == "512 GB"
+    assert section_specs["ssd capacity"] == "512 GB"
     assert parsed.attributes["storage_gb"] == 512
 
-    assert parsed.attributes["graphic processor"] == "Intel Integrated Arc"
+    assert section_specs["graphic processor"] == "Intel Integrated Arc"
     assert parsed.attributes["gpu_model"] == "Intel Integrated Arc"
 
-    assert parsed.attributes["screen size"] == "35.56 cm (14 Inch)"
+    assert section_specs["screen size"] == "35.56 cm (14 Inch)"
     assert parsed.attributes["screen_size_inches"] == 14.0
 
-    assert parsed.attributes["backlit keyboard"] == "Yes"
+    assert section_specs["backlit keyboard"] == "Yes"
     assert parsed.attributes["keyboard_backlight"] is True
 
     assert parsed.attributes["webcam_resolution"] == "1080p FHD"
@@ -538,10 +559,12 @@ def test_flipkart_parser_modern_specifications_tab() -> None:
     assert parsed.attributes["display_resolution"] == "FHD"
 
     # Check Warranty and Manufacturer specs
-    assert parsed.attributes["warranty summary"] == "1 Year Onsite Warranty"
-    assert parsed.attributes["covered in warranty"] == "Manufacturing Defects Only"
-    assert parsed.attributes["generic name"] == "Computers"
-    assert parsed.attributes["country of origin"] == "India"
+    assert section_specs["warranty summary"] == "1 Year Onsite Warranty"
+    assert section_specs["covered in warranty"] == "Manufacturing Defects Only"
+    assert section_specs["generic name"] == "Computers"
+    assert section_specs["country of origin"] == "India"
+    assert "processor brand" not in parsed.attributes
+    assert "screen size" not in parsed.attributes
 
     # Check fingerprint creation
     fp = parsed.to_fingerprint()
@@ -550,3 +573,5 @@ def test_flipkart_parser_modern_specifications_tab() -> None:
     assert fp.ram_gb == 16
     assert fp.storage_gb == 512
     assert fp.screen_size_inches == 14.0
+    assert "cpu_model" not in fp.attributes
+    assert "ram_gb" not in fp.attributes

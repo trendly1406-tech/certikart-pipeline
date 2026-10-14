@@ -605,6 +605,7 @@ class MobileIdentityNormalizer:
         from sources.common import is_ignored_spec_key
 
         extra = {k: v for k, v in (extra_attributes or {}).items() if not is_ignored_spec_key(k)}
+        extra.pop("spec_sections", None)
         for explicit_k in (
             "ram_gb",
             "storage_gb",
@@ -763,6 +764,20 @@ class MobileIdentityNormalizer:
         )
         attributes = mobile_schema.to_attribute_dict()
 
+        fingerprint_attributes = {
+            key: value
+            for key, value in attributes.items()
+            if key
+            not in {
+                "chipset",
+                "gtin",
+                "mpn",
+                "ram_gb",
+                "screen_size_inches",
+                "storage_gb",
+            }
+        }
+
         from matching.fingerprint import ProductFingerprint
 
         return ProductFingerprint(
@@ -776,5 +791,5 @@ class MobileIdentityNormalizer:
             screen_size_inches=screen_size,
             manufacturer_part_number=manufacturer_part_number,
             gtin=gtin,
-            attributes=attributes,
+            attributes=fingerprint_attributes,
         )

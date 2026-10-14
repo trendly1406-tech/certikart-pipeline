@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     JSON,
     BigInteger,
@@ -64,6 +65,71 @@ class ProductModel(Base):
     offers: Mapped[list[OfferModel]] = relationship(
         "OfferModel",
         back_populates="canonical_product",
+    )
+
+
+class ProductDocumentModel(Base):
+    """Stable semantic projection of one canonical product."""
+
+    __tablename__ = "product_documents"
+    __table_args__ = (UniqueConstraint("canonical_product_id", name="uq_product_document_product"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    canonical_product_id: Mapped[str] = mapped_column(
+        String(64),
+        ForeignKey("products.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    category: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    document_text: Mapped[str] = mapped_column(Text, nullable=False)
+    content_hash: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    document_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    source_fields: Mapped[dict[str, str]] = mapped_column(JSON, default=dict, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False
+    )
+
+
+class ProductEmbeddingModel(Base):
+    """Provider-versioned vector for a canonical product document."""
+
+    __tablename__ = "product_embeddings"
+    __table_args__ = (
+        UniqueConstraint(
+            "product_document_id",
+            "provider",
+            "model_name",
+            name="uq_product_embedding_document_provider_model",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    canonical_product_id: Mapped[str] = mapped_column(
+        String(64),
+        ForeignKey("products.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    product_document_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("product_documents.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    provider: Mapped[str] = mapped_column(String(64), nullable=False)
+    model_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    dimensions: Mapped[int] = mapped_column(Integer, nullable=False)
+    embedding: Mapped[list[float]] = mapped_column(Vector(), nullable=False)
+    content_hash: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False
     )
 
 
@@ -180,24 +246,35 @@ class OfferModel(Base):
     )
 
 
-class ScrapeRunModel(Base):
-    """Audit log of crawl and collection executions."""
+class ProductImportRunModel(Base):
+    """Durable status for one shopper-requested retailer product import."""
 
-    __tablename__ = "scrape_runs"
+    __tablename__ = "product_import_runs"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     source: Mapped[str] = mapped_column(String(32), index=True, nullable=False)
-    category: Mapped[str] = mapped_column(String(64), nullable=False)
-    status: Mapped[str] = mapped_column(String(32), default="started", nullable=False)
-    items_discovered: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    items_parsed: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    items_persisted: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    started_at: Mapped[datetime] = mapped_column(
+    source_product_id: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
+    source_url: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), index=True, nullable=False)
+    progress_stage: Mapped[str] = mapped_column(String(32), nullable=False)
+    canonical_product_id: Mapped[str | None] = mapped_column(
+        String(64),
+        ForeignKey("products.id", ondelete="SET NULL"),
+        index=True,
+        nullable=True,
+    )
+    reused_fresh_listing: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    failure_code: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    failure_message: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    requested_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utc_now, nullable=False
     )
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    duration_seconds: Mapped[float | None] = mapped_column(Float, nullable=True)
-    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False
+    )
 
 
 class ProductIdentifierModel(Base):

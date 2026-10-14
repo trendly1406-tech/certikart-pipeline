@@ -176,3 +176,70 @@ def test_reconcile_all_offers_out_of_stock() -> None:
     assert cluster.best_source == "amazon"
     assert cluster.price_spread_paise == 200000
     assert cluster.savings_paise == 200000
+
+
+def test_cluster_identity_ignores_presentation_only_spec_changes() -> None:
+    base_attributes = {
+        "cpu_model": "Ryzen 7 7730U",
+        "gpu_model": "Integrated Radeon",
+        "ram_gb": 16,
+        "storage_gb": 512,
+    }
+    first = sample_product(
+        attributes={
+            **base_attributes,
+            "warranty": "1 year",
+            "spec_sections": {"Memory": {"RAM": "16 GB"}},
+        }
+    )
+    second = sample_product(
+        attributes={
+            **base_attributes,
+            "warranty": "2 years",
+            "spec_sections": {"Hardware": {"Installed Memory": "16 GB"}},
+        }
+    )
+
+    first_cluster = reconcile_products([first]).clusters[0]
+    second_cluster = reconcile_products([second]).clusters[0]
+
+    assert first_cluster.cluster_id == second_cluster.cluster_id
+    assert "spec_sections" not in first_cluster.fingerprint.attributes
+    assert "cpu_model" not in first_cluster.fingerprint.attributes
+    assert "ram_gb" not in first_cluster.fingerprint.attributes
+    assert first_cluster.fingerprint.ram_gb == 16
+    assert first_cluster.attributes["spec_sections"] == {"Memory": {"RAM": "16 GB"}}
+
+
+def test_exact_matches_merge_complementary_spec_sections() -> None:
+    base_attributes = {
+        "cpu_model": "Core 5 210H",
+        "ram_gb": 24,
+        "storage_gb": 512,
+    }
+    first = sample_product(
+        source="flipkart",
+        source_product_id="FLIP-SPECS",
+        attributes={
+            **base_attributes,
+            "spec_sections": {"Memory": {"RAM": "24 GB"}},
+        },
+    )
+    second = sample_product(
+        source="amazon",
+        source_product_id="AMZ-SPECS",
+        attributes={
+            **base_attributes,
+            "spec_sections": {
+                "Display": {"Refresh rate": "144 Hz"},
+                "Memory": {"RAM type": "DDR5"},
+            },
+        },
+    )
+
+    cluster = reconcile_products([first, second]).clusters[0]
+
+    assert cluster.attributes["spec_sections"] == {
+        "Memory": {"RAM": "24 GB", "RAM type": "DDR5"},
+        "Display": {"Refresh rate": "144 Hz"},
+    }

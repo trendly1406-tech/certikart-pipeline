@@ -13,11 +13,14 @@ from pydantic import AnyHttpUrl
 from normalization import normalize_text
 from sources.common import (
     build_category_attributes,
+    build_spec_sections,
     extract_digits_to_paise,
+    extract_manufacturer_part_number,
     infer_brand,
     is_ignored_spec_key,
 )
 from sources.contracts import ParsedProduct, RawSourceRecord
+from sources.images import image_urls
 
 
 def clean_amz_str(val: str | None) -> str:
@@ -339,8 +342,9 @@ def parse_amazon_payload(
     )
 
     attributes = build_category_attributes(category, title, specs)
-    if sections:
-        attributes["spec_sections"] = sections
+    spec_sections = build_spec_sections(specs, sections)
+    if spec_sections:
+        attributes["spec_sections"] = spec_sections
 
     # Identifiers & Warranty
     asin_val = (
@@ -354,16 +358,15 @@ def parse_amazon_payload(
     if asin_val:
         attributes["asin"] = clean_amz_str(str(asin_val))
 
-    mpn = (
-        specs.get("manufacturer part number")
-        or specs.get("part number")
-        or specs.get("model number")
-        or specs.get("item model number")
-    )
-    if mpn:
-        clean_m = clean_amz_str(str(mpn))
+    mpn = extract_manufacturer_part_number(title, specs)
+    clean_m = clean_amz_str(str(mpn)) if mpn else None
+    if clean_m:
         attributes["mpn"] = clean_m
         attributes["model_number"] = clean_m
+    gtin_raw = specs.get("gtin") or specs.get("ean") or specs.get("upc")
+    gtin = clean_amz_str(str(gtin_raw)) if gtin_raw else None
+    if gtin:
+        attributes["gtin"] = gtin
 
     warranty = (
         specs.get("warranty description") or specs.get("warranty") or specs.get("warranty type")
@@ -379,6 +382,8 @@ def parse_amazon_payload(
         title=title,
         brand=brand,
         model_name=model_name,
+        manufacturer_part_number=clean_m,
+        gtin=gtin,
         price_paise=price_paise,
         mrp_paise=mrp_paise,
         in_stock=in_stock,
@@ -386,6 +391,24 @@ def parse_amazon_payload(
         rating=rating,
         review_count=review_count,
         source_url=source_url,
+        image_urls=image_urls(
+            [
+                json_ld_data.get("image"),
+                payload.get("image_urls"),
+                payload.get("image_url"),
+                *(
+                    sel.css(
+                        "img#landingImage::attr(data-old-hires), "
+                        "img#landingImage::attr(src), "
+                        "#imgTagWrapperId img::attr(src), "
+                        'meta[property="og:image"]::attr(content)'
+                    ).getall()
+                    if sel
+                    else []
+                ),
+            ],
+            source_url,
+        ),
         attributes=attributes,
         observed_at=observed_at,
     )

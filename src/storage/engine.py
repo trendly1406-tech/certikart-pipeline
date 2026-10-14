@@ -24,7 +24,12 @@ def create_database_engine(url: str | None = None) -> Engine:
 
 
 def init_db(engine: Engine) -> None:
-    """Initialize database tables from SQLAlchemy metadata and ensure schema migrations."""
+    """Bootstrap local/test schemas; migration-managed deployments make no DDL changes."""
+    if get_settings().schema_management == "migrations":
+        return
+    if "postgres" in str(engine.url):
+        with engine.begin() as conn:
+            conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector;"))
     Base.metadata.create_all(bind=engine)
     if "postgres" in str(engine.url):
         with engine.begin() as conn:

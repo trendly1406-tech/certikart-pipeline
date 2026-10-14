@@ -75,7 +75,7 @@ def compare_products(left: ProductFingerprint, right: ProductFingerprint) -> Mat
     category = get_category(left.category)
     missing_attributes: list[str] = []
     for attr in category.identity_attributes:
-        if attr not in left.attributes or attr not in right.attributes:
+        if left.value_for(attr) is None or right.value_for(attr) is None:
             missing_attributes.append(attr)
 
     _score_100, tier, breakdown = IdentityConfidenceScorer.calculate_confidence(left, right)

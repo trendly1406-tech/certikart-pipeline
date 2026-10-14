@@ -40,9 +40,276 @@ def doctor() -> None:
             "max_source_concurrency": settings.max_source_concurrency,
             "obey_robots_txt": settings.obey_robots_txt,
             "collection_profile": settings.collection_profile,
+            "schema_management": settings.schema_management,
+            "embedding_generation_enabled": settings.embedding_generation_enabled,
+            "embedding_api_format": settings.embedding_api_format,
+            "embedding_provider": settings.embedding_provider or "not configured",
+            "embedding_model": settings.embedding_model or "not configured",
+            "embedding_dimensions": settings.embedding_dimensions,
+            "semantic_search_enabled": settings.semantic_search_enabled,
             "supported_sources": supported_sources(),
             "database_url": "configured",
         }
+    )
+
+
+@app.command("db-upgrade")
+def db_upgrade(revision: str = typer.Option("head", help="Alembic revision to apply")) -> None:
+    """Apply managed catalog migrations as an explicit release step."""
+    from storage.migrations import current_database_revision, upgrade_database
+
+    upgrade_database(revision=revision)
+    current = current_database_revision()
+    console.print_json(json.dumps({"database_revision": current, "status": "upgraded"}))
+
+
+@app.command("db-current")
+def db_current() -> None:
+    """Report the current managed catalog migration revision."""
+    from storage.migrations import current_database_revision
+
+    console.print_json(json.dumps({"database_revision": current_database_revision()}))
+
+
+@app.command("backfill-product-images")
+def backfill_product_images(
+    limit: int = typer.Option(100, min=1, max=1000, help="Maximum products to inspect"),
+    force: bool = typer.Option(False, help="Replace existing uploaded galleries"),
+) -> None:
+    """Upload historical retailer images and persist permanent product gallery URLs."""
+    from pydantic import TypeAdapter
+    from sqlalchemy import select
+
+    from storage.engine import create_database_engine, get_session_factory
+    from storage.images import ImageUploadCandidate, upload_image_candidates
+    from storage.models import ProductModel, RetailerProductModel
+
+    settings = get_settings()
+    if not settings.image_upload_enabled:
+        raise typer.BadParameter("Set CERTIKART_IMAGE_UPLOAD_ENABLED=true first")
+
+    engine = create_database_engine(settings.database_url.get_secret_value())
+    session_factory = get_session_factory(engine)
+    url_adapter = TypeAdapter(tuple[AnyHttpUrl, ...])
+
+    with session_factory() as session:
+        products = list(
+            session.scalars(select(ProductModel).order_by(ProductModel.id).limit(limit))
+        )
+        product_ids = [product.id for product in products]
+        listings = list(
+            session.scalars(
+                select(RetailerProductModel)
+                .where(RetailerProductModel.canonical_product_id.in_(product_ids))
+                .order_by(
+                    RetailerProductModel.canonical_product_id,
+                    RetailerProductModel.last_seen_at.desc(),
+                )
+            )
+        )
+
+    products_by_id = {product.id: product for product in products}
+    selected: dict[str, RetailerProductModel] = {}
+    candidates: list[ImageUploadCandidate] = []
+    for listing in listings:
+        product_id = listing.canonical_product_id
+        if product_id is None or product_id in selected:
+            continue
+        product = products_by_id[product_id]
+        if not force and product.attributes.get("image_url"):
+            continue
+        raw_urls = listing.attributes.get("source_image_urls", [])
+        if not raw_urls:
+            continue
+        try:
+            urls = url_adapter.validate_python(raw_urls)
+        except ValueError:
+            continue
+        selected[product_id] = listing
+        candidates.append(
+            ImageUploadCandidate(
+                canonical_product_id=product_id,
+                source=listing.source,
+                source_product_id=listing.source_product_id,
+                observed_at=(
+                    listing.last_seen_at.replace(tzinfo=UTC)
+                    if listing.last_seen_at.tzinfo is None
+                    else listing.last_seen_at
+                ),
+                image_urls=urls,
+            )
+        )
+
+    media = upload_image_candidates(candidates, settings)
+    with session_factory() as session, session.begin():
+        for product_id, images in media.items():
+            stored_product = session.get(ProductModel, product_id)
+            if stored_product is None:
+                continue
+            attributes = dict(stored_product.attributes)
+            attributes["image_url"] = str(images[0].url)
+            attributes["images"] = [image.model_dump(mode="json") for image in images]
+            stored_product.attributes = attributes
+
+    console.print_json(
+        json.dumps(
+            {
+                "products_inspected": len(products),
+                "products_with_source_images": len(candidates),
+                "products_uploaded": len(media),
+                "images_uploaded": sum(len(images) for images in media.values()),
+            }
+        )
+    )
+
+
+@app.command("refresh-catalog-images")
+def refresh_catalog_images(
+    limit: int = typer.Option(500, min=1, max=2000, help="Maximum products to refresh"),
+    concurrency: int = typer.Option(4, min=1, max=10, help="Concurrent retailer fetches"),
+    force: bool = typer.Option(False, help="Refresh products that already have images"),
+    category: str = typer.Option("all", help="Category to refresh: laptop, mobile, or all"),
+    source: str = typer.Option("all", help="Prefer one retailer source, or use all"),
+) -> None:
+    """Fetch retailer pages for historical products, upload galleries and persist their URLs."""
+    from sqlalchemy import select
+
+    from storage.engine import create_database_engine, get_session_factory
+    from storage.images import ImageUploadCandidate, upload_image_candidates
+    from storage.models import ProductModel, RetailerProductModel
+
+    settings = get_settings()
+    if not settings.image_upload_enabled:
+        raise typer.BadParameter("Set CERTIKART_IMAGE_UPLOAD_ENABLED=true first")
+
+    category_names = (
+        list(supported_categories())
+        if category.casefold().strip() in {"all", "*"}
+        else [get_category(category).code]
+    )
+    source_names = (
+        list(supported_sources())
+        if source.casefold().strip() in {"all", "*"}
+        else [source.casefold().strip()]
+    )
+    unknown_sources = set(source_names) - set(supported_sources())
+    if unknown_sources:
+        names = ", ".join(sorted(unknown_sources))
+        raise typer.BadParameter(f"Unsupported retailer source: {names}")
+
+    engine = create_database_engine(settings.database_url.get_secret_value())
+    session_factory = get_session_factory(engine)
+    with session_factory() as session:
+        products = list(
+            session.scalars(
+                select(ProductModel)
+                .where(ProductModel.category.in_(category_names))
+                .order_by(ProductModel.id)
+            )
+        )
+        listings = list(
+            session.scalars(
+                select(RetailerProductModel).order_by(
+                    RetailerProductModel.canonical_product_id,
+                    RetailerProductModel.last_seen_at.desc(),
+                )
+            )
+        )
+
+    categories = {product.id: product.category for product in products}
+    needs_image = {
+        product.id for product in products if force or not product.attributes.get("image_url")
+    }
+    listings_by_product: dict[str, list[tuple[str, str, str]]] = {}
+    for listing in listings:
+        product_id = listing.canonical_product_id
+        if (
+            product_id is None
+            or product_id not in needs_image
+            or listing.source not in source_names
+        ):
+            continue
+        listings_by_product.setdefault(product_id, []).append(
+            (listing.source, listing.source_product_id, listing.source_url)
+        )
+
+    targets = list(listings_by_product.items())[:limit]
+
+    async def collect() -> tuple[list[ImageUploadCandidate], int]:
+        transport = HttpSourceTransport()
+        semaphore = asyncio.Semaphore(concurrency)
+        completed = 0
+        failed = 0
+
+        async def fetch_product(
+            product_id: str,
+            product_listings: list[tuple[str, str, str]],
+        ) -> ImageUploadCandidate | None:
+            nonlocal completed, failed
+            async with semaphore:
+                for source, source_product_id, source_url in product_listings:
+                    try:
+                        reference = SourceProductReference(
+                            source_product_id=source_product_id,
+                            category=categories[product_id],
+                            subcategory=None,
+                            source_url=AnyHttpUrl(source_url),
+                        )
+                        adapter = get_source_adapter(source)([reference], transport)
+                        parsed = adapter.parse(await adapter.fetch(source_product_id))
+                        if parsed.image_urls:
+                            completed += 1
+                            if completed % 10 == 0:
+                                console.print(
+                                    f"[cyan]Image refresh progress: {completed + failed}/"
+                                    f"{len(targets)} products[/cyan]"
+                                )
+                            return ImageUploadCandidate(
+                                canonical_product_id=product_id,
+                                source=source,
+                                source_product_id=source_product_id,
+                                observed_at=parsed.observed_at,
+                                image_urls=parsed.image_urls,
+                            )
+                    except Exception:
+                        continue
+                failed += 1
+                if (completed + failed) % 10 == 0:
+                    console.print(
+                        f"[cyan]Image refresh progress: {completed + failed}/"
+                        f"{len(targets)} products[/cyan]"
+                    )
+                return None
+
+        gathered = await asyncio.gather(
+            *(fetch_product(product_id, rows) for product_id, rows in targets)
+        )
+        return [candidate for candidate in gathered if candidate is not None], failed
+
+    candidates, fetch_failures = asyncio.run(collect())
+    media = upload_image_candidates(candidates, settings)
+    with session_factory() as session, session.begin():
+        for product_id, images in media.items():
+            stored_product = session.get(ProductModel, product_id)
+            if stored_product is None:
+                continue
+            attributes = dict(stored_product.attributes)
+            attributes["image_url"] = str(images[0].url)
+            attributes["images"] = [image.model_dump(mode="json") for image in images]
+            stored_product.attributes = attributes
+
+    console.print_json(
+        json.dumps(
+            {
+                "products_targeted": len(targets),
+                "categories": category_names,
+                "sources": source_names,
+                "retailer_pages_with_images": len(candidates),
+                "retailer_fetch_failures": fetch_failures,
+                "products_uploaded": len(media),
+                "images_uploaded": sum(len(images) for images in media.values()),
+            }
+        )
     )
 
 
@@ -666,13 +933,17 @@ def bulk_collect(
     if persist_val:
         try:
             from storage.engine import create_database_engine, get_session_factory, init_db
+            from storage.images import upload_report_images
             from storage.repository import PipelineRepository
 
             engine = create_database_engine()
             init_db(engine)
             session_factory = get_session_factory(engine)
+            media = upload_report_images(report)
             with session_factory() as session, session.begin():
-                db_metrics = PipelineRepository.persist_reconciliation_report(session, report)
+                db_metrics = PipelineRepository.persist_reconciliation_report(
+                    session, report, media
+                )
             p_cnt = db_metrics["products_persisted"]
             o_cnt = db_metrics["offers_persisted"]
             console.print(f"[green]✓ DB: {p_cnt} products, {o_cnt} offers.[/green]")
@@ -774,6 +1045,67 @@ def lifecycle_summary() -> None:
         table.add_row(status_name, str(count_val), note)
 
     console.print(table)
+
+
+@app.command("embedding-status")
+def embedding_status(
+    provider: str = typer.Option("", help="Provider label; defaults to pipeline settings"),
+    model: str = typer.Option("", help="Embedding model; defaults to pipeline settings"),
+    dimensions: int | None = typer.Option(
+        None,
+        min=1,
+        help="Expected dimensions; defaults to pipeline settings",
+    ),
+    category: str = typer.Option("", help="Optional exact category code"),
+) -> None:
+    """Report document and embedding coverage without calling a provider."""
+    from retrieval.indexing import get_embedding_index_health
+    from storage.engine import create_database_engine, get_session_factory, init_db
+
+    settings = get_settings()
+    provider_name = provider.strip() or settings.embedding_provider
+    model_name = model.strip() or settings.embedding_model
+    if not provider_name or not model_name:
+        raise typer.BadParameter("Configure or pass both provider and model")
+
+    engine = create_database_engine()
+    init_db(engine)
+    session_factory = get_session_factory(engine)
+    with session_factory() as session:
+        health = get_embedding_index_health(
+            session,
+            provider=provider_name,
+            model_name=model_name,
+            dimensions=dimensions or settings.embedding_dimensions,
+            category=category.strip() or None,
+        )
+    console.print_json(json.dumps(health.model_dump(mode="json")))
+
+
+@app.command("embedding-backfill")
+def embedding_backfill(
+    limit: int = typer.Option(1000, min=1, help="Maximum embeddings to write"),
+    category: str = typer.Option("", help="Optional exact category code"),
+) -> None:
+    """Explicitly generate missing or stale embeddings in resumable batches."""
+    from retrieval.embeddings import build_configured_embedding_provider
+    from retrieval.indexing import backfill_product_embeddings
+    from storage.engine import create_database_engine, get_session_factory, init_db
+
+    settings = get_settings()
+    provider = build_configured_embedding_provider(settings)
+    engine = create_database_engine()
+    init_db(engine)
+    session_factory = get_session_factory(engine)
+    with session_factory() as session:
+        result = backfill_product_embeddings(
+            session,
+            provider=provider,
+            batch_size=settings.embedding_batch_size,
+            limit=limit,
+            category=category.strip() or None,
+        )
+    console.print_json(json.dumps(result.model_dump(mode="json")))
 
 
 @app.command("crawl-cycle")

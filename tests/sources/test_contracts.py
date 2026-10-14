@@ -103,7 +103,8 @@ def test_parsed_product_contract_and_conversions() -> None:
     assert fp.category == "laptop"
     assert parsed.subcategory == "business_laptop"
     assert fp.brand == "lenovo"
-    assert fp.attributes["ram_gb"] == 16
+    assert fp.ram_gb == 16
+    assert "ram_gb" not in fp.attributes
 
     obs_default = parsed.to_price_observation()
     assert obs_default.offer_id == "amazon:B0TEST123"

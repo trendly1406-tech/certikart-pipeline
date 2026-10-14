@@ -13,11 +13,14 @@ from pydantic import AnyHttpUrl
 from normalization import normalize_text
 from sources.common import (
     build_category_attributes,
+    build_spec_sections,
     extract_digits_to_paise,
+    extract_manufacturer_part_number,
     infer_brand,
     is_ignored_spec_key,
 )
 from sources.contracts import ParsedProduct, RawSourceRecord
+from sources.images import image_urls
 
 
 def extract_croma_specs(
@@ -419,19 +422,16 @@ def parse_croma_payload(
     )
 
     attributes = build_category_attributes(category, title, specs)
-    if sections:
-        attributes["spec_sections"] = sections
+    spec_sections = build_spec_sections(specs, sections)
+    if spec_sections:
+        attributes["spec_sections"] = spec_sections
 
     if "ssd" in title.casefold() or any("ssd" in str(v).casefold() for v in specs.values()):
         attributes["storage_type"] = "SSD"
     elif "emmc" in title.casefold() or any("emmc" in str(v).casefold() for v in specs.values()):
         attributes["storage_type"] = "eMMC"
 
-    mpn = (
-        specs.get("model number")
-        or specs.get("part number")
-        or initial_data_product.get("specialSKU")
-    )
+    mpn = extract_manufacturer_part_number(title, specs) or initial_data_product.get("specialSKU")
     if mpn:
         attributes["mpn"] = str(mpn).strip()
 
@@ -456,6 +456,8 @@ def parse_croma_payload(
         title=title,
         brand=brand,
         model_name=str(model_name),
+        manufacturer_part_number=str(mpn).strip() if mpn else None,
+        gtin=str(ean).strip() if ean else None,
         price_paise=price_paise,
         mrp_paise=mrp_paise,
         in_stock=in_stock,
@@ -463,6 +465,23 @@ def parse_croma_payload(
         rating=rating,
         review_count=review_count,
         source_url=source_url,
+        image_urls=image_urls(
+            [
+                json_ld_data.get("image"),
+                payload.get("image_urls"),
+                payload.get("image_url"),
+                *(
+                    sel.css(
+                        ".pdp-img img::attr(src), "
+                        ".product-image img::attr(src), "
+                        'meta[property="og:image"]::attr(content)'
+                    ).getall()
+                    if sel
+                    else []
+                ),
+            ],
+            source_url,
+        ),
         attributes=attributes,
         observed_at=observed_at,
     )

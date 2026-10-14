@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import AnyHttpUrl
 
-from collectors.discovery import discover_laptop_references
+from collectors.discovery import discover_laptop_references, discover_product_references
 from sources.contracts import FetchedSourceDocument, SourceTransport
 
 
@@ -131,6 +131,87 @@ async def test_discover_zero_items_returns_empty() -> None:
     transport = MockDiscoveryTransport({})
     refs = await discover_laptop_references("flipkart", transport, max_items=0)
     assert refs == []
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("source", "search_url", "html", "expected_id"),
+    [
+        (
+            "amazon",
+            "https://www.amazon.in/s?k=Apple+MDVT4HN%2FA",
+            '<div data-asin="B0M5AIR001"><h2>Apple MacBook Air M5</h2></div>',
+            "B0M5AIR001",
+        ),
+        (
+            "flipkart",
+            "https://www.flipkart.com/search?q=Apple+MDVT4HN%2FA",
+            '<a href="/apple-macbook-air/p/itmM5AIR001?pid=COM1">MacBook</a>',
+            "itmM5AIR001",
+        ),
+        (
+            "croma",
+            "https://www.croma.com/searchB?q=Apple+MDVT4HN%2FA",
+            """
+            <script>window.__INITIAL_DATA__={"plpReducer":{"plpData":{"products":[
+              {"code":"345678","url":"/apple-macbook-air-m5/p/345678","name":"Apple MacBook Air M5"}
+            ]}}};</script>
+            """,
+            "345678",
+        ),
+    ],
+)
+async def test_discover_exact_product_references(
+    source: str,
+    search_url: str,
+    html: str,
+    expected_id: str,
+) -> None:
+    transport = MockDiscoveryTransport({search_url: html})
+
+    refs = await discover_product_references(
+        source,
+        "Apple MDVT4HN/A",
+        "laptop",
+        transport,
+        max_items=2,
+    )
+
+    assert [reference.source_product_id for reference in refs] == [expected_id]
+
+
+@pytest.mark.asyncio
+async def test_exact_product_discovery_has_no_unrelated_seed_fallback() -> None:
+    transport = MockDiscoveryTransport({})
+
+    refs = await discover_product_references(
+        "amazon",
+        "Apple MDVT4HN/A",
+        "laptop",
+        transport,
+    )
+
+    assert refs == []
+
+
+@pytest.mark.asyncio
+async def test_exact_amazon_discovery_prioritizes_matching_brand() -> None:
+    html = """
+    <div data-asin="B0OTHER001"><h2>Unrelated Watch</h2></div>
+    <div data-asin="B0OTHER002"><h2>Generic Laptop</h2></div>
+    <div data-asin="B0APPLE001"><h2>Apple MacBook Air M5 16GB 1TB</h2></div>
+    """
+    transport = MockDiscoveryTransport({"https://www.amazon.in/s?k=Apple+MDVT4HN%2FA": html})
+
+    refs = await discover_product_references(
+        "amazon",
+        "Apple MDVT4HN/A",
+        "laptop",
+        transport,
+        max_items=1,
+    )
+
+    assert [reference.source_product_id for reference in refs] == ["B0APPLE001"]
 
 
 @pytest.mark.asyncio

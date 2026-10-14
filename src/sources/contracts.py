@@ -92,6 +92,7 @@ class ParsedProduct(BaseModel):
     category: str = Field(pattern=r"^[a-z][a-z0-9_]*$")
     subcategory: str | None = Field(default=None, pattern=r"^[a-z][a-z0-9_]*$")
     title: str = Field(min_length=1)
+    image_urls: tuple[AnyHttpUrl, ...] = Field(default=(), max_length=6)
     brand: str = Field(min_length=1)
     model_name: str = Field(min_length=1)
     manufacturer_part_number: str | None = None

@@ -45,7 +45,7 @@ Retailer APIs / Sitemaps / Web Pages (Amazon, Flipkart, Croma)
                      │
                      ▼
        Transactional PostgreSQL Persistence (storage/)
-       (products, product_identifiers, retailer_products, offers, scrape_runs)
+       (products, product_identifiers, retailer_products, offers, product_import_runs)
                      │
                      ▼
            certikart-api (FastAPI)

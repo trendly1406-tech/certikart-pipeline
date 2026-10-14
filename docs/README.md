@@ -17,6 +17,9 @@ This repository documents the background product-data pipeline for **Certikart**
 | **Customer Review Processing** | [Review Intelligence](architecture/review-intelligence.md) | Aspect-sentiment analysis and review aggregation models. |
 | **Technical Decisions (ADRs)** | [Architecture Decisions](architecture/decisions.md) | Record of architectural decisions and trade-offs. |
 | **Runtime Safeguards** | [Production Safety](standards/production-safety.md) | Rate limits, anti-bot resilience, and schema isolation. |
+| **Product Image Storage** | [S3 Product Images](deployment/product-images.md) | Image collection, environment configuration, WebP optimization and S3 uploads. |
+| **Product Embeddings** | [pgvector Embeddings](deployment/product-embeddings.md) | OpenAI-compatible/Ollama generation, resumable backfill, and coverage health. |
+| **Product URL Imports** | [URL Import Workflow](workflows/product-url-imports.md) | Validated retailer intake, durable runs, freshness reuse, cancellation, and canonical resolution. |
 | **Docker & Database Deployment** | [Docker Deployment](deployment/docker.md) | Running PostgreSQL, Adminer DB UI, and containerized images. |
 | **Type Safety Standards** | [Type Safety](standards/type-safety.md) | Strict typing, Pydantic contracts, and mypy compliance. |
 
@@ -26,5 +29,5 @@ This repository documents the background product-data pipeline for **Certikart**
 
 - **Engineering Maturity Score**: **9.2 / 10** (Production-Grade)
 - **Deterministic Matcher Accuracy**: **100.00% Precision**, **0.00% False Positive Rate**
-- **Test Coverage**: **82.88%** across 229 unit/integration tests
-- **Static Typing**: **0 mypy errors** across 100 source files
+- **Test Coverage**: **80.95%** across 275 unit/integration tests
+- **Static Typing**: **0 mypy errors** across 125 checked source, test, and migration files

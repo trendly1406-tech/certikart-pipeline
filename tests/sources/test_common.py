@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from sources.common import (
     build_category_attributes,
+    build_spec_sections,
     clean_capacity_str,
     extract_digits_to_paise,
     extract_json_ld_products,
+    extract_manufacturer_part_number,
     infer_brand,
 )
 
@@ -18,6 +20,20 @@ def test_extract_digits_to_paise() -> None:
     assert extract_digits_to_paise("") is None
     assert extract_digits_to_paise(None) is None
     assert extract_digits_to_paise("Free / Not Available") is None
+
+
+def test_extract_manufacturer_part_number_prefers_specs_then_title_code() -> None:
+    assert (
+        extract_manufacturer_part_number(
+            "Apple MacBook Air M5 MDVT4HN/A",
+            {"model number": "SPEC-CODE-1"},
+        )
+        == "SPEC-CODE-1"
+    )
+    assert (
+        extract_manufacturer_part_number("Apple MacBook Air M5 16GB 1TB MDVT4HN/A") == "MDVT4HN/A"
+    )
+    assert extract_manufacturer_part_number("Apple MacBook Air M5 16GB 1TB") is None
 
 
 def test_infer_brand() -> None:
@@ -85,7 +101,24 @@ def test_build_category_attributes_laptop() -> None:
     assert attrs["cpu_model"] == "Intel Core i5-13420H"
     assert attrs["gpu_model"] == "NVIDIA GeForce RTX 3050"
     assert attrs["screen_size_inches"] == 15.6
-    assert attrs["ram size"] == "16 GB"
+    assert "ram size" not in attrs
+
+
+def test_build_spec_sections_deduplicates_grouped_raw_specs() -> None:
+    sections = build_spec_sections(
+        {
+            "Screen Size": "15.6 inch",
+            "RAM Size": "16 GB",
+            "Warranty": "1 Year",
+        },
+        {"Display": {"Screen Size": "15.6 inch"}},
+    )
+
+    assert sections["Display"] == {"Screen Size": "15.6 inch"}
+    assert sections["Other Specifications"] == {
+        "RAM Size": "16 GB",
+        "Warranty": "1 Year",
+    }
 
 
 def test_build_category_attributes_mobile() -> None:

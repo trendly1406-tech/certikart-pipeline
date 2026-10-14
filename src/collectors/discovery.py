@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+from urllib.parse import quote_plus
 
 from parsel import Selector
 from pydantic import AnyHttpUrl
@@ -43,6 +44,191 @@ ACCESSORY_KEYWORDS: tuple[str, ...] = (
     "holder",
     "pouch",
 )
+
+
+async def discover_product_references(
+    source: str,
+    query: str,
+    category: str,
+    transport: SourceTransport,
+    *,
+    max_items: int = 5,
+) -> list[SourceProductReference]:
+    """Find bounded retailer candidates for one exact product identity query.
+
+    This intentionally has no seed/fallback products: a URL import may only fetch
+    candidates returned by the exact retailer search, then reconciliation decides
+    whether each candidate is the same variant.
+    """
+    normalized_source = source.casefold().strip()
+    normalized_query = " ".join(query.split())
+    if max_items < 1 or not normalized_query:
+        return []
+
+    encoded_query = quote_plus(normalized_query)
+    if normalized_source == "amazon":
+        url = AnyHttpUrl(f"https://www.amazon.in/s?k={encoded_query}")
+    elif normalized_source == "flipkart":
+        url = AnyHttpUrl(f"https://www.flipkart.com/search?q={encoded_query}")
+    elif normalized_source == "croma":
+        url = AnyHttpUrl(f"https://www.croma.com/searchB?q={encoded_query}")
+    else:
+        raise ValueError(f"unsupported discovery source: {source!r}")
+
+    try:
+        document = await transport.fetch(url)
+    except Exception:
+        return []
+    html = str(document.payload.get("html", ""))
+    if not html:
+        return []
+
+    if normalized_source == "amazon":
+        required_brand = normalized_query.split(maxsplit=1)[0].casefold()
+        return _amazon_search_references(html, category, max_items, required_brand)
+    if normalized_source == "flipkart":
+        return _flipkart_search_references(html, category, max_items)
+    return _croma_search_references(html, category, max_items)
+
+
+def _amazon_search_references(
+    html: str,
+    category: str,
+    max_items: int,
+    required_brand: str,
+) -> list[SourceProductReference]:
+    selector = Selector(text=html)
+    asins = [
+        value.strip().upper()
+        for value in selector.css("div[data-asin]::attr(data-asin)").getall()
+        if len(value.strip()) == 10
+    ]
+    if not asins:
+        asins = [value.upper() for value in re.findall(r"/dp/([A-Z0-9]{10})", html)]
+
+    ranked_asins: list[tuple[int, int, str]] = []
+    seen: set[str] = set()
+    for index, asin in enumerate(asins):
+        if asin in seen:
+            continue
+        item = selector.css(f'div[data-asin="{asin}"]')
+        title = " ".join(item.css("h2 ::text, img::attr(alt)").getall()).casefold()
+        if any(keyword in title for keyword in ACCESSORY_KEYWORDS):
+            continue
+        seen.add(asin)
+        brand_rank = 0 if required_brand and required_brand in title else 1
+        ranked_asins.append((brand_rank, index, asin))
+
+    references: list[SourceProductReference] = []
+    for _, _, asin in sorted(ranked_asins):
+        if len(references) >= max_items:
+            break
+        references.append(
+            SourceProductReference(
+                source_product_id=asin,
+                category=category,
+                subcategory=None,
+                source_url=AnyHttpUrl(f"https://www.amazon.in/dp/{asin}"),
+            )
+        )
+    return references
+
+
+def _flipkart_search_references(
+    html: str,
+    category: str,
+    max_items: int,
+) -> list[SourceProductReference]:
+    selector = Selector(text=html)
+    references: list[SourceProductReference] = []
+    seen: set[str] = set()
+    for href in selector.css("a[href*='/p/']::attr(href)").getall():
+        if len(references) >= max_items:
+            break
+        match = re.search(r"/p/(itm[a-zA-Z0-9]+)", href)
+        if match is None:
+            continue
+        source_product_id = match.group(1)
+        clean_path = href.split("?", 1)[0]
+        if source_product_id in seen or any(
+            keyword in clean_path.casefold() for keyword in ACCESSORY_KEYWORDS
+        ):
+            continue
+        seen.add(source_product_id)
+        references.append(
+            SourceProductReference(
+                source_product_id=source_product_id,
+                category=category,
+                subcategory=None,
+                source_url=AnyHttpUrl(f"https://www.flipkart.com{clean_path}"),
+            )
+        )
+    return references
+
+
+def _croma_search_references(
+    html: str,
+    category: str,
+    max_items: int,
+) -> list[SourceProductReference]:
+    products: list[object] = []
+    marker_index = html.find("window.__INITIAL_DATA__")
+    if marker_index >= 0:
+        payload = html[marker_index:]
+        brace_index = payload.find("{")
+        if brace_index >= 0:
+            cleaned = re.sub(r":\s*undefined\b", ":null", payload[brace_index:])
+            cleaned = re.sub(r",\s*([\]}])", r"\1", cleaned)
+            try:
+                data, _ = json.JSONDecoder().raw_decode(cleaned)
+                products = data.get("plpReducer", {}).get("plpData", {}).get("products", [])
+            except (json.JSONDecodeError, AttributeError):
+                products = []
+
+    references: list[SourceProductReference] = []
+    seen: set[str] = set()
+    for raw_product in products:
+        if len(references) >= max_items:
+            break
+        if not isinstance(raw_product, dict):
+            continue
+        code = str(raw_product.get("code", "")).strip()
+        relative_url = str(raw_product.get("url", "")).strip()
+        name = str(raw_product.get("name", "")).casefold()
+        if not code or code in seen or any(keyword in name for keyword in ACCESSORY_KEYWORDS):
+            continue
+        seen.add(code)
+        source_url = (
+            f"https://www.croma.com{relative_url}"
+            if relative_url.startswith("/")
+            else f"https://www.croma.com/p/{code}"
+        )
+        references.append(
+            SourceProductReference(
+                source_product_id=code,
+                category=category,
+                subcategory=None,
+                source_url=AnyHttpUrl(source_url),
+            )
+        )
+
+    if len(references) < max_items:
+        for match in re.finditer(r"(?:https://www\.croma\.com)?([^\"']*?/p/(\d{5,12}))", html):
+            if len(references) >= max_items:
+                break
+            path, code = match.groups()
+            if code in seen:
+                continue
+            seen.add(code)
+            references.append(
+                SourceProductReference(
+                    source_product_id=code,
+                    category=category,
+                    subcategory=None,
+                    source_url=AnyHttpUrl(f"https://www.croma.com{path.split('?', 1)[0]}"),
+                )
+            )
+    return references
 
 
 async def discover_laptop_references(

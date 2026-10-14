@@ -34,7 +34,7 @@ Transactional PostgreSQL Persistence (storage/repository.py)
   ├── retailer_products (Store-specific Listings)
   ├── offers (Live Commercial State in Integer Paise)
   ├── product_identifiers (Indexed ASIN, MPN, GTIN, EAN)
-  └── scrape_runs (Operational Telemetry)
+  └── product_import_runs (User-submitted URL import progress)
 ```
 
 ---

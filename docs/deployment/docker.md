@@ -8,7 +8,7 @@ Development and production intentionally use different database ownership:
 
 | Environment | PostgreSQL owner | Compose file |
 |---|---|---|
-| Local development | `postgres:18-alpine` container with a named volume | `compose.dev.yml` |
+| Local development | `pgvector/pgvector:pg18` container with a named volume | `compose.dev.yml` |
 | Production | Managed/external PostgreSQL with backups, HA, encryption, and monitoring | `compose.prod.yml` |
 
 There is no PostgreSQL service in `compose.prod.yml`.
@@ -53,8 +53,16 @@ Inject secrets from the deployment platform; never commit or bake them into the 
 ```bash
 export CERTIKART_PIPELINE_IMAGE='ghcr.io/acme/certikart-pipeline@sha256:...'
 export CERTIKART_DATABASE_URL='postgresql+psycopg://user:password@managed-db:5432/certikart?sslmode=require'
+docker compose -f compose.prod.yml run --rm pipeline db-upgrade
 docker compose -f compose.prod.yml run --rm pipeline doctor
 ```
+
+`db-upgrade` is the only production startup step that changes the managed schema. The release
+image includes `alembic.ini` and the revision files. Normal jobs run with
+`CERTIKART_SCHEMA_MANAGEMENT=migrations`, which prevents their shared `init_db` compatibility call
+from issuing `create_all` or ad-hoc DDL. The first retrieval revision expects the legacy `products`
+table to exist. Its migration role needs permission to install the `vector` extension, or the
+database administrator must install that extension before the release.
 
 The production service is read-only, drops Linux capabilities, denies privilege escalation, and has only a small temporary filesystem. The placeholder `doctor` command must be replaced by a concrete idempotent job command when those commands exist.
 
@@ -62,7 +70,7 @@ Production requirements outside this repository:
 
 - managed database credentials are least-privilege and rotated;
 - TLS certificate verification follows the database provider's instructions;
-- schema migrations run as a separate, controlled release step;
+- schema migrations run through `db-upgrade` as a separate, controlled release step;
 - network egress is limited to the database and approved source domains;
 - job timeouts, retries, concurrency policy, alerts, and a kill switch are configured;
 - database backups and point-in-time restore are tested.

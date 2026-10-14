@@ -14,7 +14,7 @@ def test_worker_config_and_settings() -> None:
     assert WorkerConfig.get_retailer_concurrency("croma") == 5
     assert WorkerConfig.get_retailer_concurrency("unknown") == 5
 
-    assert len(WorkerSettings.functions) == 4
+    assert len(WorkerSettings.functions) == 7
     assert WorkerSettings.max_jobs == 25
     assert WorkerSettings.queue_name == "certikart:crawl_queue"
 

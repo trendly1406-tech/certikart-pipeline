@@ -1,5 +1,7 @@
 # Certikart Pipeline: Database Architecture, Table Use-Cases & Architecture Rating 🏛️
 
+> Updated 2026-10-02: the unused, empty `scrape_runs` table was removed. The current managed schema uses `product_import_runs` for interactive imports; scheduled-run telemetry is in structured logs and collection reports.
+
 This document provides a comprehensive breakdown of the PostgreSQL database tables, their specific use cases, why each architectural design decision was made, and an objective engineering evaluation and rating of this architecture.
 
 ---
@@ -79,18 +81,6 @@ erDiagram
         timestamp created_at "UTC"
     }
 
-    scrape_runs {
-        string id PK "UUID"
-        string source "amazon / flipkart / croma"
-        string category "laptop / mobile"
-        string status "started / completed / failed"
-        int items_discovered "Total discovered"
-        int items_parsed "Total parsed"
-        int items_persisted "Total persisted to DB"
-        float duration_seconds "Execution latency"
-        timestamp started_at "UTC"
-        timestamp finished_at "UTC"
-    }
 ```
 
 ---
@@ -103,7 +93,7 @@ erDiagram
 | **`retailer_products`** | **Store-Specific Listing** | `id`, `source`, `source_product_id`, `source_url`, `quality_status`, `lifecycle_status` | **Use Case**: Represents the raw listing on Amazon, Flipkart, or Croma.<br>**Design Rationale**: Stores raw crawling state, crawler timestamps (`first_seen_at`, `last_seen_at`), and quality gating flags (e.g., accessory detection) to isolate raw scraped data from clean master records. |
 | **`offers`** | **Active Commercial Terms** | `retailer_product_id`, `price_paise`, `mrp_paise`, `in_stock`, `seller`, `rating` | **Use Case**: Real-time price comparison ("Which retailer is cheapest right now?").<br>**Design Rationale**: Kept 1-to-1 with `retailer_products` to deliver instant $O(1)$ indexed price queries without table scanning. Uses integer paise (`BIGINT`) to prevent IEEE 754 floating-point rounding bugs. |
 | **`product_identifiers`** | **Global Identity Index** | `identifier_type`, `identifier_value`, `canonical_product_id` | **Use Case**: Fast $O(1)$ deterministic matching by ASIN, MPN, GTIN, and EAN.<br>**Design Rationale**: Instead of hiding part numbers inside JSON, a first-class indexed table enforces unique `(identifier_type, identifier_value)` constraints, preventing duplicate product creation across scraping runs. |
-| **`scrape_runs`** | **Operational Telemetry** | `source`, `category`, `status`, `items_persisted`, `duration_seconds` | **Use Case**: Crawl monitoring and pipeline observability.<br>**Design Rationale**: Tracks execution latency, throughput, and error states across Amazon, Flipkart, and Croma scraping runs for Prometheus/Grafana metrics. |
+| **`product_import_runs`** | **Interactive Import Lifecycle** | `source`, `source_product_id`, `status`, `progress_stage`, `canonical_product_id` | **Use Case**: Durable progress for customer-submitted product URL imports, consumed by the API. Scheduled collection observability stays in structured logs and collection reports. |
 
 ---
 
@@ -135,7 +125,7 @@ erDiagram
 | **Matching Accuracy & Safety** | **9.5 / 10** | **100.00% Precision**, **0.00% False Positive Rate** on ground-truth benchmark pairs. |
 | **Type Safety & Schemas** | **9.5 / 10** | Fully typed with Pydantic v2 schemas; 0 `mypy` issues across 100 source files. |
 | **Test Quality & Coverage** | **9.2 / 10** | **229 passed tests**, **82.88% test coverage**, fast 20s test execution. |
-| **Operational Observability** | **8.8 / 10** | `scrape_runs` telemetry, CLI diagnostics (`make doctor`), Adminer DB UI. |
+| **Operational Observability** | **8.8 / 10** | Structured logs, collection reports, CLI diagnostics (`make doctor`), Adminer DB UI. |
 | **Scalability (Current vs Target)** | **8.4 / 10** | Excellent for single-node / PostgreSQL batch & ARQ async workers. Roadmap targets ClickHouse and Kafka for $>10\text{M}$ volume. |
 
 ### Summary for Technical Reviews:

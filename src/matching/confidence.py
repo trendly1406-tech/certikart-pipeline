@@ -151,12 +151,7 @@ class IdentityConfidenceScorer:
             == str(right.attributes["color"]).casefold()
         ):
             spec_pts += 3
-        if (
-            left.attributes.get("gpu_model")
-            and right.attributes.get("gpu_model")
-            and str(left.attributes["gpu_model"]).casefold()
-            == str(right.attributes["gpu_model"]).casefold()
-        ):
+        if left.gpu_model and right.gpu_model and left.gpu_model == right.gpu_model:
             spec_pts += 2
 
         breakdown = ConfidenceScoreBreakdown(

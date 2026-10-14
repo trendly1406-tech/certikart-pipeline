@@ -110,7 +110,7 @@ A database visualizer is automatically provided when running `make dev-up`.
    - **`retailer_products`**: Specific store listings with `quality_status` (`VALID` vs `SUSPICIOUS`) and `lifecycle_status`.
    - **`offers`**: Real-time prices (`price_paise`, `mrp_paise`, `coupon_price_paise`, `in_stock`, `seller`).
    - **`product_identifiers`**: Global normalized identity index (`ASIN`, `MPN`, `GTIN`, `EAN`).
-   - **`scrape_runs`**: Crawler telemetry, durations, and parsed counts.
+   - **`product_import_runs`**: Durable status and progress for user-submitted product URL imports.
 
 ---
 

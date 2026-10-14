@@ -2,7 +2,7 @@ name: certikart-pipeline-dev
 
 services:
   postgres:
-    image: postgres:18-alpine
+    image: pgvector/pgvector:pg18
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-certikart}
       POSTGRES_USER: ${POSTGRES_USER:-certikart}
@@ -31,6 +31,48 @@ services:
       postgres:
         condition: service_healthy
 
+  valkey:
+    image: valkey/valkey:8-alpine
+    ports:
+      - "${VALKEY_PORT:-6379}:6379"
+    command: ["valkey-server", "--appendonly", "yes"]
+    volumes:
+      - certikart_valkey_data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      target: runtime
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+      valkey:
+        condition: service_healthy
+        restart: true
+    environment:
+      CERTIKART_ENVIRONMENT: development
+      CERTIKART_LOG_LEVEL: ${CERTIKART_LOG_LEVEL:-INFO}
+      CERTIKART_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-certikart}:${POSTGRES_PASSWORD:-certikart_dev_only}@postgres:5432/${POSTGRES_DB:-certikart}
+      CERTIKART_REDIS_URL: redis://valkey:6379/0
+      CERTIKART_REQUEST_TIMEOUT_SECONDS: ${CERTIKART_REQUEST_TIMEOUT_SECONDS:-30}
+      CERTIKART_MAX_SOURCE_CONCURRENCY: ${CERTIKART_MAX_SOURCE_CONCURRENCY:-2}
+      CERTIKART_OBEY_ROBOTS_TXT: ${CERTIKART_OBEY_ROBOTS_TXT:-true}
+      CERTIKART_IMAGE_UPLOAD_ENABLED: ${CERTIKART_IMAGE_UPLOAD_ENABLED:-false}
+      CERTIKART_IMAGE_BUCKET: ${CERTIKART_IMAGE_BUCKET:-}
+      CERTIKART_IMAGE_SUPABASE_URL: ${CERTIKART_IMAGE_SUPABASE_URL:-}
+      CERTIKART_IMAGE_SUPABASE_SECRET_KEY: ${CERTIKART_IMAGE_SUPABASE_SECRET_KEY:-}
+    init: true
+    stop_grace_period: 30s
+    restart: unless-stopped
+    command: ["worker"]
+
   pipeline:
     profiles: ["tools"]
     build:
@@ -48,8 +90,31 @@ services:
       CERTIKART_MAX_SOURCE_CONCURRENCY: ${CERTIKART_MAX_SOURCE_CONCURRENCY:-2}
       CERTIKART_OBEY_ROBOTS_TXT: ${CERTIKART_OBEY_ROBOTS_TXT:-true}
       CERTIKART_COLLECTION_PROFILE: ${CERTIKART_COLLECTION_PROFILE:-smoke}
+      CERTIKART_EMBEDDING_GENERATION_ENABLED: ${CERTIKART_EMBEDDING_GENERATION_ENABLED:-false}
+      CERTIKART_EMBEDDING_API_FORMAT: ${CERTIKART_EMBEDDING_API_FORMAT:-openai}
+      CERTIKART_EMBEDDING_PROVIDER: ${CERTIKART_EMBEDDING_PROVIDER:-}
+      CERTIKART_EMBEDDING_MODEL: ${CERTIKART_EMBEDDING_MODEL:-}
+      CERTIKART_EMBEDDING_API_KEY: ${CERTIKART_EMBEDDING_API_KEY:-}
+      CERTIKART_EMBEDDING_BASE_URL: ${CERTIKART_EMBEDDING_BASE_URL:-https://api.openai.com/v1}
+      CERTIKART_EMBEDDING_DIMENSIONS: ${CERTIKART_EMBEDDING_DIMENSIONS:-1536}
+      CERTIKART_EMBEDDING_BATCH_SIZE: ${CERTIKART_EMBEDDING_BATCH_SIZE:-32}
+      CERTIKART_EMBEDDING_TIMEOUT_SECONDS: ${CERTIKART_EMBEDDING_TIMEOUT_SECONDS:-30}
+      CERTIKART_IMAGE_UPLOAD_ENABLED: ${CERTIKART_IMAGE_UPLOAD_ENABLED:-false}
+      CERTIKART_IMAGE_BUCKET: ${CERTIKART_IMAGE_BUCKET:-}
+      CERTIKART_IMAGE_S3_BUCKET: ${CERTIKART_IMAGE_S3_BUCKET:-}
+      CERTIKART_IMAGE_S3_REGION: ${CERTIKART_IMAGE_S3_REGION:-ap-south-1}
+      CERTIKART_IMAGE_S3_ENDPOINT_URL: ${CERTIKART_IMAGE_S3_ENDPOINT_URL:-}
+      CERTIKART_IMAGE_S3_FORCE_PATH_STYLE: ${CERTIKART_IMAGE_S3_FORCE_PATH_STYLE:-false}
+      CERTIKART_IMAGE_PUBLIC_BASE_URL: ${CERTIKART_IMAGE_PUBLIC_BASE_URL:-}
+      CERTIKART_IMAGE_S3_PREFIX: ${CERTIKART_IMAGE_S3_PREFIX:-products}
+      CERTIKART_IMAGE_S3_ACCESS_KEY_ID: ${CERTIKART_IMAGE_S3_ACCESS_KEY_ID:-}
+      CERTIKART_IMAGE_S3_SECRET_ACCESS_KEY: ${CERTIKART_IMAGE_S3_SECRET_ACCESS_KEY:-}
+      CERTIKART_IMAGE_S3_SESSION_TOKEN: ${CERTIKART_IMAGE_S3_SESSION_TOKEN:-}
+      CERTIKART_IMAGE_SUPABASE_URL: ${CERTIKART_IMAGE_SUPABASE_URL:-}
+      CERTIKART_IMAGE_SUPABASE_SECRET_KEY: ${CERTIKART_IMAGE_SUPABASE_SECRET_KEY:-}
     init: true
     command: ["doctor"]
 
 volumes:
   certikart_postgres_data:
+  certikart_valkey_data:

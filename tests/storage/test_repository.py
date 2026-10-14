@@ -12,7 +12,6 @@ from storage.models import (
     OfferModel,
     ProductModel,
     RetailerProductModel,
-    ScrapeRunModel,
 )
 from storage.repository import PipelineRepository
 
@@ -171,28 +170,70 @@ def test_price_change_updates_offer(db_session: Session) -> None:
     assert offer2.price_paise == 12990000
 
 
-def test_scrape_run_lifecycle(db_session: Session) -> None:
-    run_id = PipelineRepository.start_scrape_run(db_session, source="amazon", category="laptop")
-    assert run_id is not None
-
-    run = db_session.scalar(select(ScrapeRunModel).where(ScrapeRunModel.id == run_id))
-    assert run is not None
-    assert run.status == "started"
-    assert run.source == "amazon"
-
-    PipelineRepository.finish_scrape_run(
-        db_session,
-        run_id=run_id,
-        status="completed",
-        items_discovered=50,
-        items_parsed=48,
-        items_persisted=48,
-    )
+def test_existing_listing_keeps_canonical_id_when_derived_identity_changes(
+    db_session: Session,
+) -> None:
+    original = sample_parsed_product("amazon", "B01", "Apple MacBook Air M5 16/512")
+    original_report = reconcile_products([original])
+    original_id = original_report.clusters[0].cluster_id
+    PipelineRepository.persist_reconciliation_report(db_session, original_report)
     db_session.commit()
 
-    run_finished = db_session.scalar(select(ScrapeRunModel).where(ScrapeRunModel.id == run_id))
-    assert run_finished is not None
-    assert run_finished.status == "completed"
-    assert run_finished.items_persisted == 48
-    assert run_finished.duration_seconds is not None
-    assert run_finished.duration_seconds >= 0.0
+    changed = original.model_copy(
+        update={
+            "model_name": "MacBook Air M5 2026",
+            "attributes": {
+                **original.attributes,
+                "storage_gb": 1024,
+                "spec_sections": {"Storage": {"Capacity": "1 TB"}},
+            },
+        }
+    )
+    changed_report = reconcile_products([changed])
+    assert changed_report.clusters[0].cluster_id != original_id
+
+    result = PipelineRepository.persist_reconciliation_report(db_session, changed_report)
+    db_session.commit()
+
+    products = db_session.scalars(select(ProductModel)).all()
+    retailer = db_session.scalar(
+        select(RetailerProductModel).where(RetailerProductModel.source_product_id == "B01")
+    )
+    offer = db_session.scalar(select(OfferModel).where(OfferModel.source_product_id == "B01"))
+    assert result["products_persisted"] == 0
+    assert [product.id for product in products] == [original_id]
+    assert retailer is not None
+    assert retailer.canonical_product_id == original_id
+    assert offer is not None
+    assert offer.canonical_product_id == original_id
+    assert products[0].model_name == "macbook air m5 2026"
+
+
+def test_sparse_refresh_preserves_existing_rich_spec_sections(db_session: Session) -> None:
+    base = sample_parsed_product("flipkart", "FLIP-RICH", "Apple MacBook Air M5 16/512")
+    rich = base.model_copy(
+        update={
+            "attributes": {
+                **base.attributes,
+                "spec_sections": {
+                    "Display": {"Refresh rate": "60 Hz", "Panel": "IPS"},
+                    "Memory": {"RAM type": "LPDDR5X"},
+                },
+            }
+        }
+    )
+    report = reconcile_products([rich])
+    product_id = report.clusters[0].cluster_id
+    PipelineRepository.persist_reconciliation_report(db_session, report)
+    db_session.commit()
+
+    sparse = base.model_copy(update={"observed_at": datetime.now(UTC) + timedelta(hours=1)})
+    PipelineRepository.persist_reconciliation_report(db_session, reconcile_products([sparse]))
+    db_session.commit()
+
+    stored = db_session.get(ProductModel, product_id)
+    assert stored is not None
+    assert stored.attributes["spec_sections"] == {
+        "Display": {"Refresh rate": "60 Hz", "Panel": "IPS"},
+        "Memory": {"RAM type": "LPDDR5X"},
+    }

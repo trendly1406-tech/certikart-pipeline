@@ -3,6 +3,7 @@
 from collectors.discovery import (
     discover_category_references,
     discover_laptop_references,
+    discover_product_references,
 )
 from collectors.frontier import (
     CrawlFrontierStore,
@@ -52,5 +53,6 @@ __all__ = [
     "create_collection_plan",
     "discover_category_references",
     "discover_laptop_references",
+    "discover_product_references",
     "get_collection_budget",
 ]

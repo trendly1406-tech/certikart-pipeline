@@ -13,6 +13,11 @@ from categories.contracts import AttributeValue
 from normalization import normalize_capacity_gb, normalize_text
 
 PRICE_CLEAN_PATTERN = re.compile(r"[^\d.]")
+PART_NUMBER_PATTERN = re.compile(
+    r"\b(?=[A-Z0-9/-]{6,}\b)(?=[A-Z0-9/-]*[A-Z])(?=[A-Z0-9/-]*\d)"
+    r"[A-Z0-9]+(?:[-/][A-Z0-9]+)+\b",
+    re.IGNORECASE,
+)
 
 KNOWN_BRANDS: tuple[str, ...] = (
     "apple",
@@ -116,6 +121,26 @@ def is_ignored_spec_key(key: str) -> bool:
     return any(pattern in k for pattern in noise_patterns)
 
 
+def extract_manufacturer_part_number(
+    title: str,
+    specs: dict[str, str] | None = None,
+) -> str | None:
+    """Read an explicit MPN/model code, with a conservative title fallback."""
+    normalized_specs = specs or {}
+    for key in (
+        "manufacturer part number",
+        "part number",
+        "model number",
+        "item model number",
+        "mpn",
+    ):
+        value = normalized_specs.get(key)
+        if value and value.strip():
+            return value.strip()
+    candidates = PART_NUMBER_PATTERN.findall(title)
+    return candidates[-1].strip() if candidates else None
+
+
 def extract_digits_to_paise(raw_text: str | None) -> int | None:
     """Extract numeric price string and convert to integer paise."""
     if not raw_text:
@@ -194,14 +219,8 @@ def build_category_attributes(
     title: str,
     raw_specs: dict[str, str],
 ) -> dict[str, AttributeValue]:
-    """Construct structured domain attributes using category handler while preserving specs."""
+    """Construct canonical domain attributes from retailer specifications."""
     attributes: dict[str, AttributeValue] = {}
-
-    # Store normalized raw specifications (excluding retailer support/contact noise)
-    for k, v in raw_specs.items():
-        clean_key = normalize_text(k)
-        if clean_key and not is_ignored_spec_key(clean_key):
-            attributes[clean_key] = v.strip()
 
     norm_specs = {normalize_text(k): v for k, v in raw_specs.items() if not is_ignored_spec_key(k)}
 
@@ -1107,3 +1126,41 @@ def build_category_attributes(
                 break
 
     return attributes
+
+
+def build_spec_sections(
+    raw_specs: dict[str, str],
+    sections: dict[str, dict[str, str]] | None = None,
+) -> dict[str, dict[str, str]]:
+    """Keep source specifications once, grouped for display and provenance."""
+    cleaned_sections: dict[str, dict[str, str]] = {}
+    represented: set[tuple[str, str]] = set()
+
+    for section_name, values in (sections or {}).items():
+        clean_values: dict[str, str] = {}
+        for key, value in values.items():
+            clean_key = str(key).strip()
+            clean_value = str(value).strip()
+            if not clean_key or not clean_value or is_ignored_spec_key(clean_key):
+                continue
+            clean_values[clean_key] = clean_value
+            represented.add((normalize_text(clean_key), normalize_text(clean_value)))
+        if clean_values:
+            cleaned_sections[str(section_name).strip()] = clean_values
+
+    ungrouped: dict[str, str] = {}
+    for key, value in raw_specs.items():
+        clean_key = str(key).strip()
+        clean_value = str(value).strip()
+        identity = (normalize_text(clean_key), normalize_text(clean_value))
+        if (
+            clean_key
+            and clean_value
+            and not is_ignored_spec_key(clean_key)
+            and identity not in represented
+        ):
+            ungrouped[clean_key] = clean_value
+    if ungrouped:
+        cleaned_sections["Other Specifications"] = ungrouped
+
+    return cleaned_sections

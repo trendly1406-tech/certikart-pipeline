@@ -30,6 +30,8 @@ WORKDIR /app
 
 COPY --from=builder --chown=10001:10001 /app/.venv /app/.venv
 COPY --chown=10001:10001 src /app/src
+COPY --chown=10001:10001 alembic.ini /app/alembic.ini
+COPY --chown=10001:10001 migrations /app/migrations
 
 USER 10001:10001
 

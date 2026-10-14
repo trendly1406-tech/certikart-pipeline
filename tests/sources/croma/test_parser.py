@@ -281,6 +281,8 @@ def test_11_gtin_ean_and_mpn_extraction() -> None:
     assert parsed.attributes["ean"] == "195949778899"
     assert parsed.attributes["gtin"] == "195949778899"
     assert parsed.attributes["mpn"] == "MRYR3HN/A"
+    assert parsed.gtin == "195949778899"
+    assert parsed.manufacturer_part_number == "MRYR3HN/A"
 
 
 def test_12_and_13_price_and_mrp_extraction() -> None:

@@ -59,7 +59,8 @@ def test_amazon_parser_extracts_all_fields_from_html() -> None:
 
     fp = parsed.to_fingerprint()
     assert fp.brand == "asus"
-    assert fp.attributes["ram_gb"] == 8
+    assert fp.ram_gb == 8
+    assert "ram_gb" not in fp.attributes
 
     obs = parsed.to_price_observation()
     assert obs.price_paise == 3899000
@@ -396,6 +397,8 @@ def test_amazon_detailed_expander_specifications_html() -> None:
     assert parsed.attributes["wifi_standard"] == "Wi-Fi 6"
     assert parsed.attributes["asin"] == "B0DT74FF9P"
     assert parsed.attributes["mpn"] == "90NB15A2-M007P0"
+    assert parsed.manufacturer_part_number == "90NB15A2-M007P0"
+    assert parsed.to_fingerprint().manufacturer_part_number == "90nb15a2-m007p0"
     assert parsed.attributes["warranty"] == "1 year Global Warranty"
     spec_sec = parsed.attributes["spec_sections"]
     assert isinstance(spec_sec, dict)

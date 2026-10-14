@@ -13,11 +13,14 @@ from pydantic import AnyHttpUrl
 from normalization import normalize_text
 from sources.common import (
     build_category_attributes,
+    build_spec_sections,
     extract_digits_to_paise,
+    extract_manufacturer_part_number,
     infer_brand,
     is_ignored_spec_key,
 )
 from sources.contracts import ParsedProduct, RawSourceRecord
+from sources.images import image_urls
 
 
 def extract_flipkart_specs(
@@ -373,8 +376,16 @@ def parse_flipkart_payload(
     )
 
     attributes = build_category_attributes(category, title, specs)
-    if sections:
-        attributes["spec_sections"] = json.dumps(sections)
+    spec_sections = build_spec_sections(specs, sections)
+    if spec_sections:
+        attributes["spec_sections"] = spec_sections
+
+    mpn = extract_manufacturer_part_number(title, specs)
+    gtin = specs.get("gtin") or specs.get("ean") or specs.get("upc")
+    if mpn:
+        attributes["mpn"] = mpn
+    if gtin:
+        attributes["gtin"] = gtin
 
     return ParsedProduct(
         source="flipkart",
@@ -384,6 +395,8 @@ def parse_flipkart_payload(
         title=title,
         brand=brand,
         model_name=model_name,
+        manufacturer_part_number=mpn,
+        gtin=gtin,
         price_paise=price_paise,
         mrp_paise=mrp_paise,
         in_stock=in_stock,
@@ -391,6 +404,24 @@ def parse_flipkart_payload(
         rating=rating,
         review_count=review_count,
         source_url=source_url,
+        image_urls=image_urls(
+            [
+                json_ld_data.get("image"),
+                payload.get("image_urls"),
+                payload.get("image_url"),
+                *(
+                    sel.css(
+                        "div._1BweB8 img::attr(src), "
+                        "img.DByuf4::attr(src), "
+                        "img._396cs4::attr(src), "
+                        'meta[property="og:image"]::attr(content)'
+                    ).getall()
+                    if sel
+                    else []
+                ),
+            ],
+            source_url,
+        ),
         attributes=attributes,
         observed_at=observed_at,
     )

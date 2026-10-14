@@ -7,7 +7,6 @@ from storage.models import (
     ProductIdentifierModel,
     ProductModel,
     RetailerProductModel,
-    ScrapeRunModel,
 )
 from storage.repository import PipelineRepository
 
@@ -18,7 +17,6 @@ __all__ = [
     "ProductIdentifierModel",
     "ProductModel",
     "RetailerProductModel",
-    "ScrapeRunModel",
     "create_database_engine",
     "get_session_factory",
     "init_db",

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import uuid
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
@@ -14,11 +15,11 @@ from storage.models import (
     ProductIdentifierModel,
     ProductModel,
     RetailerProductModel,
-    ScrapeRunModel,
 )
 
 if TYPE_CHECKING:
-    from matching.reconciliation import ReconciliationReport
+    from matching.reconciliation import CanonicalVariantCluster, ReconciliationReport
+    from storage.images import StoredImage
 
 
 class PipelineRepository:
@@ -29,19 +30,38 @@ class PipelineRepository:
         cls,
         session: Session,
         report: ReconciliationReport,
+        media: Mapping[str, tuple[StoredImage, ...]] | None = None,
     ) -> dict[str, int]:
         """Persist a ReconciliationReport with idempotent upserts and append-only price history."""
         products_count = 0
         offers_count = 0
 
+        # Imported lazily so the storage module remains usable while matching
+        # contracts are still being initialized.
+        from matching.reconciliation import merge_catalog_attributes
+
         for cluster in report.clusters:
+            canonical_product_id = (
+                cls._existing_canonical_product_id(session, cluster) or cluster.cluster_id
+            )
+            attributes = dict(cluster.attributes)
+            if cluster.offers:
+                first_offer = cluster.offers[0]
+                attributes["display_title"] = first_offer.title
+                attributes["title_source_url"] = str(first_offer.source_url)
+                attributes["title_observed_at"] = first_offer.observed_at.isoformat()
+                attributes["source_image_urls"] = [str(url) for url in first_offer.image_urls]
+            images = (media or {}).get(cluster.cluster_id, ())
+            if images:
+                attributes["image_url"] = str(images[0].url)
+                attributes["images"] = [image.model_dump(mode="json") for image in images]
             # 1. Upsert Canonical Product
-            product_stmt = select(ProductModel).where(ProductModel.id == cluster.cluster_id)
+            product_stmt = select(ProductModel).where(ProductModel.id == canonical_product_id)
             product = session.scalar(product_stmt)
 
             if product is None:
                 product = ProductModel(
-                    id=cluster.cluster_id,
+                    id=canonical_product_id,
                     category=cluster.category,
                     brand=cluster.brand,
                     model_name=cluster.model_name,
@@ -51,13 +71,26 @@ class PipelineRepository:
                     storage_gb=cluster.fingerprint.storage_gb,
                     screen_size_inches=cluster.fingerprint.screen_size_inches,
                     gpu_model=cluster.fingerprint.gpu_model,
-                    attributes=dict(cluster.attributes),
+                    attributes=attributes,
                 )
                 session.add(product)
                 products_count += 1
             else:
+                attributes = merge_catalog_attributes(product.attributes, attributes)
+                product.category = cluster.category
+                product.brand = cluster.brand
                 product.model_name = cluster.model_name
-                product.attributes = dict(cluster.attributes)
+                product.family = cluster.fingerprint.family
+                product.chip = cluster.fingerprint.chip
+                product.ram_gb = cluster.fingerprint.ram_gb
+                product.storage_gb = cluster.fingerprint.storage_gb
+                product.screen_size_inches = cluster.fingerprint.screen_size_inches
+                product.gpu_model = cluster.fingerprint.gpu_model
+                # Preserve previously uploaded images if this crawl has none or upload failed.
+                for key in ("image_url", "images"):
+                    if key not in attributes and key in product.attributes:
+                        attributes[key] = product.attributes[key]
+                product.attributes = attributes
                 product.updated_at = datetime.now(UTC)
 
             # Flush so product.id is committed for foreign keys
@@ -73,14 +106,17 @@ class PipelineRepository:
 
                 if ret_product is None:
                     ret_product = RetailerProductModel(
-                        canonical_product_id=cluster.cluster_id,
+                        canonical_product_id=canonical_product_id,
                         source=offer_item.source,
                         source_product_id=offer_item.source_product_id,
                         source_url=str(offer_item.source_url),
                         title=offer_item.title,
                         brand=cluster.brand,
                         model_name=cluster.model_name,
-                        attributes=dict(cluster.attributes),
+                        attributes={
+                            **cluster.attributes,
+                            "source_image_urls": [str(url) for url in offer_item.image_urls],
+                        },
                         quality_status=offer_item.quality_status.value
                         if hasattr(offer_item.quality_status, "value")
                         else str(offer_item.quality_status),
@@ -94,9 +130,17 @@ class PipelineRepository:
                     session.add(ret_product)
                     session.flush()
                 else:
-                    ret_product.canonical_product_id = cluster.cluster_id
+                    ret_product.canonical_product_id = canonical_product_id
                     ret_product.last_seen_at = offer_item.observed_at
                     ret_product.title = offer_item.title
+                    ret_product.source_url = str(offer_item.source_url)
+                    ret_product.attributes = {
+                        **merge_catalog_attributes(
+                            ret_product.attributes,
+                            cluster.attributes,
+                        ),
+                        "source_image_urls": [str(url) for url in offer_item.image_urls],
+                    }
                     ret_product.model_name = cluster.model_name
                     ret_product.quality_status = (
                         offer_item.quality_status.value
@@ -120,7 +164,7 @@ class PipelineRepository:
                 if offer_model is None:
                     offer_model = OfferModel(
                         retailer_product_id=ret_product.id,
-                        canonical_product_id=cluster.cluster_id,
+                        canonical_product_id=canonical_product_id,
                         source=offer_item.source,
                         source_product_id=offer_item.source_product_id,
                         source_url=str(offer_item.source_url),
@@ -143,7 +187,9 @@ class PipelineRepository:
                     session.flush()
                     offers_count += 1
                 else:
-                    offer_model.canonical_product_id = cluster.cluster_id
+                    offer_model.canonical_product_id = canonical_product_id
+                    offer_model.title = offer_item.title
+                    offer_model.source_url = str(offer_item.source_url)
                     offer_model.price_paise = offer_item.price_paise
                     offer_model.mrp_paise = offer_item.mrp_paise
                     offer_model.coupon_price_paise = offer_item.coupon_price_paise
@@ -194,7 +240,7 @@ class PipelineRepository:
                     if existing_id is None:
                         id_entry = ProductIdentifierModel(
                             id=f"id_{uuid.uuid4().hex[:16]}",
-                            canonical_product_id=cluster.cluster_id,
+                            canonical_product_id=canonical_product_id,
                             identifier_type=id_type,
                             identifier_value=id_val,
                             source=offer_item.source,
@@ -203,62 +249,37 @@ class PipelineRepository:
                         session.add(id_entry)
                         session.flush()
 
+            # Imported lazily to keep storage package initialization acyclic.
+            from retrieval.documents import build_canonical_product_document
+            from retrieval.repository import ProductRetrievalRepository
+
+            ProductRetrievalRepository(session).upsert_document(
+                build_canonical_product_document(product)
+            )
+
         return {
             "products_persisted": products_count,
             "offers_persisted": offers_count,
         }
 
-    @classmethod
-    def start_scrape_run(
-        cls,
+    @staticmethod
+    def _existing_canonical_product_id(
         session: Session,
-        *,
-        source: str,
-        category: str,
-    ) -> str:
-        """Create and record the start of a scrape execution run."""
-        run_id = str(uuid.uuid4())
-        scrape_run = ScrapeRunModel(
-            id=run_id,
-            source=source,
-            category=category,
-            status="started",
-            started_at=datetime.now(UTC),
-        )
-        session.add(scrape_run)
-        session.flush()
-        return run_id
-
-    @classmethod
-    def finish_scrape_run(
-        cls,
-        session: Session,
-        *,
-        run_id: str,
-        status: str = "completed",
-        items_discovered: int = 0,
-        items_parsed: int = 0,
-        items_persisted: int = 0,
-        error_message: str | None = None,
-    ) -> None:
-        """Mark a scrape execution run as finished with execution metrics."""
-        stmt = select(ScrapeRunModel).where(ScrapeRunModel.id == run_id)
-        run = session.scalar(stmt)
-        if run is not None:
-            now = datetime.now(UTC)
-            run.status = status
-            run.items_discovered = items_discovered
-            run.items_parsed = items_parsed
-            run.items_persisted = items_persisted
-            run.completed_at = now
-            started_at = (
-                run.started_at.replace(tzinfo=UTC)
-                if run.started_at.tzinfo is None
-                else run.started_at
+        cluster: CanonicalVariantCluster,
+    ) -> str | None:
+        """Keep a retailer listing attached to its established canonical ID."""
+        candidates: list[str] = []
+        for offer in cluster.offers:
+            stmt = select(RetailerProductModel.canonical_product_id).where(
+                RetailerProductModel.source == offer.source,
+                RetailerProductModel.source_product_id == offer.source_product_id,
             )
-            run.duration_seconds = max((now - started_at).total_seconds(), 0.0)
-            run.error_message = error_message
-            session.flush()
+            existing = session.scalar(stmt)
+            if existing:
+                candidates.append(existing)
+        if not candidates:
+            return None
+        return sorted(set(candidates), key=lambda item: (-candidates.count(item), item))[0]
 
     @classmethod
     def get_canonical_product(

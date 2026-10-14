@@ -3,12 +3,17 @@ from __future__ import annotations
 import asyncio
 from typing import Any
 
+from arq import cron, func
+
 from sources.transport import HttpSourceTransport
 from storage.engine import create_database_engine, get_session_factory, init_db
 from workers.config import WorkerConfig
 from workers.tasks import (
+    task_backfill_product_embeddings,
+    task_cancel_product_import,
     task_crawl_product,
     task_discover_sitemap,
+    task_import_product_url,
     task_reconcile_and_persist,
     task_send_to_dead_letter,
 )
@@ -50,9 +55,13 @@ class WorkerSettings:
     functions = (
         task_discover_sitemap,
         task_crawl_product,
-        task_reconcile_and_persist,
+        func(task_import_product_url, timeout=180),
+        task_cancel_product_import,
+        func(task_reconcile_and_persist, timeout=900),
+        func(task_backfill_product_embeddings, timeout=1800),
         task_send_to_dead_letter,
     )
+    cron_jobs = (cron(task_backfill_product_embeddings, minute={0, 15, 30, 45}),)
     on_startup = startup
     on_shutdown = shutdown
     redis_settings = WorkerConfig.get_redis_settings()

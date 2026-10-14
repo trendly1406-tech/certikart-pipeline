@@ -5,9 +5,10 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import AnyHttpUrl
 
-from sources.contracts import FetchedSourceDocument, SourceTransport
+from sources.contracts import FetchedSourceDocument, ParsedProduct, SourceTransport
 from storage.engine import create_database_engine, get_session_factory, init_db
 from workers.tasks import (
+    infer_import_category,
     task_crawl_product,
     task_discover_sitemap,
     task_reconcile_and_persist,
@@ -67,6 +68,33 @@ async def test_task_crawl_product() -> None:
     assert res["brand"] == "Apple"
     assert res["price_paise"] == 13499000
     assert "parsed_payload" in res
+
+
+def test_infer_import_category_from_product_identity() -> None:
+    base = {
+        "source": "amazon",
+        "source_product_id": "B0TEST999",
+        "source_url": "https://amazon.in/dp/B0TEST999",
+        "category": "laptop",
+        "brand": "ASUS",
+        "model_name": "CX15",
+        "price_paise": 2499000,
+        "in_stock": True,
+        "attributes": {},
+        "observed_at": datetime.now(UTC),
+    }
+    laptop = ParsedProduct.model_validate({**base, "title": "ASUS Chromebook CX15 Laptop"})
+    mobile = ParsedProduct.model_validate(
+        {
+            **base,
+            "title": "OnePlus 13R 5G Smartphone",
+            "brand": "OnePlus",
+            "model_name": "13R",
+        }
+    )
+
+    assert infer_import_category(laptop) == "laptop"
+    assert infer_import_category(mobile) == "mobile"
 
 
 @pytest.mark.asyncio

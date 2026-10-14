@@ -29,545 +29,251 @@
   },
   "clusters": [
     {
-      "cluster_id": "clus_1b9b7d5a54c212a5",
+      "cluster_id": "clus_034524d94ff8c713",
       "category": "laptop",
-      "brand": "hp",
-      "model_name": "hp laptop",
+      "brand": "offbeat",
+      "model_name": "offbeat",
       "attributes": {
-        "ram_gb": 16,
-        "storage_gb": 1024,
-        "storage_type": "ssd",
-        "cpu_model": "qualcomm x1-26- 100",
-        "gpu_model": "qualcomm",
-        "screen_size_inches": 14.0,
-        "operating_system": "windows 11 home",
-        "color": "silver",
-        "ram_type": "lpddr5x",
-        "display_type": "oled",
-        "keyboard_backlight": true,
-        "weight_kg": 1.29,
-        "battery_wh": 59.0,
-        "wifi_standard": "wi-fi 6e",
-        "model_number": "c08q7pa",
-        "warranty": "1 year manufacturer warranty on the device from the date of purchase. in case of any technical/product related queries, please call 1800-258-7170 or 1860-258-3079",
+        "operating_system": "Linux, Windows 10, Windows 8",
+        "color": "Dash",
+        "mpn": "OBSCDASHSIL",
+        "model_number": "OBSCDASHSIL",
+        "asin": "B0CRR6DK7V",
+        "warranty": "1 year Manufacturer's warranty",
         "spec_sections": {
-          "Additional details": {
-            "Colour": "Silver",
-            "Hard Drive Size": "1 TB",
-            "Operating System": "Windows 11 Home",
-            "Other Special Features of the Product": "Anti Glare Coating, Backlit Keyboard",
-            "Graphics Description": "Integrated",
-            "Graphics Co Processor": "Qualcomm Adreno GPU",
-            "Hard Disk Description": "SSD",
-            "Item Weight": "1.35 Kilograms",
-            "Video Processor": "Qualcomm",
-            "Specific Uses For Product": "Business, Multimedia",
-            "Webcam Capability": "Yes",
-            "Automatic Backup Software Included": "Microsoft Office",
-            "Form Factor": "laptop",
-            "Hard Drive Interface": "USB",
-            "Graphics Ram Type": "VRAM",
-            "Compatible Devices": "Keyboards",
-            "Warranty Type": "Limited",
-            "Item Dimensions L x W x Thickness": "21.5L x 1.9W x 36Th Centimeters",
-            "Video Output": "DisplayPort"
+          "Features & Specs": {
+            "Network Connectivity Technology": "Bluetooth",
+            "Product Features": "rechargeable wireless bluetooth office mouse",
+            "Movement Detection": "Optical",
+            "Button Quantity": "4",
+            "Hand Orientation": "Ambidextrous",
+            "Compatible Devices": "MacBook/Ipad, Personal Computer, Smart TV, Tablet",
+            "Operating System": "Linux, Windows 10, Windows 8",
+            "Battery Average Life": "24 Months",
+            "Hardware Platform": "all",
+            "Power Source": "Battery Powered",
+            "Mouse Maximum Sensitivity": "1600 Dots per Inch",
+            "Minimum Required Operating System Version": "Windows 8"
           },
-          "Display": {
-            "Screen Size": "35.6 Centimetres",
-            "Scanner Resolution": "1920 x 1200 pixels",
-            "Native Resolution": "1920 x 1200 pixels",
-            "Display Type": "LCD",
-            "Maximum Display Resolution": "1920 x 1200 Pixels",
-            "Display Technology": "OLED"
+          "Style": {
+            "Colour": "Dash",
+            "Style Name": "PRO",
+            "Theme": "Rainbow"
           },
-          "Memory": {
-            "RAM Memory Installed": "16 GB",
-            "RAM Memory Technology": "LPDDR5X",
-            "Ram Memory Maximum Size": "16 GB",
-            "Memory Speed": "8448 MHz",
-            "System RAM Type": "DDR5 RAM",
-            "DriveMemory Storage Capacity": "1 TB",
-            "Available Memory Slots": "Yes"
-          },
-          "Battery": {
-            "Battery Cell Type": "Lithium Ion",
-            "Battery Life": "34 Hours",
-            "Lithium Battery Energy Content": "59 Watt Hours"
-          },
-          "Input Devices": {
-            "Human Interface Types": "Keyboard",
-            "Keyboard Description": "Backlit"
-          },
-          "Processor": {
-            "Processor Type": "Snapdragon",
-            "Processor Speed": "3 GHz",
-            "Processor Count": "1",
-            "Processor Brand": "Qualcomm",
-            "CPU Model Number": "X1-26- 100",
-            "CPU Model Generation": "8th Gen",
-            "CPU Model Speed Maximum": "3 GHz"
+          "Measurements": {
+            "Item Weight Unit of Measure": "110 Grams",
+            "Item Dimensions L x W": "14L x 4W Centimeters",
+            "Unit Count": "4.00 Count"
           },
           "Item details": {
-            "Brand Name": "HP",
-            "Model Name": "HP Laptop",
-            "Country of Origin": "China",
-            "Model Year": "2025",
-            "Model Number": "C08Q7PA",
-            "Box Contents": "Laptop, Power Adapter, User manual",
-            "Manufacturer": "HP, HP India Sales Pvt. Ltd.",
-            "Unit Count": "1.0 Count",
-            "UPC": "199251826924",
-            "Number of Items": "1",
-            "Importer Contact Information": "HP India Sales Private Limited, No. 24, Kothari Arena, Hosur Main Road, Adugodi, Bangalore, Karnataka, India, 560030",
-            "Item Type Name": "Laptop",
-            "Manufacturer Contact Information": "HP India Sales Pvt. Ltd.",
-            "Packer Contact Information": "HP India Sales Pvt. Ltd.",
-            "Warranty Description": "1 year manufacturer warranty on the device from the date of purchase. In case of any technical/product related queries, please call 1800-258-7170 or 1860-258-3079",
-            "Manufacturer Part Number": "C08Q7PA",
-            "ASIN": "B0F8P844W2"
-          },
-          "Connectivity": {
-            "Network Connectivity Technology": "Bluetooth, USB, Wi-Fi",
-            "Wireless Technology": "Wi-Fi",
-            "Computer Wireless Type": "Bluetooth",
-            "Bluetooth support?": "Yes",
-            "Wi-Fi Generation": "Wifi 6e"
-          },
-          "Ports & Slots": {
-            "Total USB Ports": "3",
-            "Hardware Interface": "USB",
-            "Number Of Ports": "3",
-            "Total HDMI Port": "1"
+            "Brand Name": "Offbeat",
+            "Antenna Location": "Office",
+            "Model Number": "OBSCDASHSIL",
+            "Are Batteries Included?": "Yes",
+            "Are Batteries Required": "No",
+            "Manufacturer": "Offbeat Electronics Pvt Ltd INDIA, Offbeat Electronics Pvt Ltd INDIA",
+            "Importer Contact Information": "Shopper's Cloud Bangalore KA INDIA",
+            "Item Type Name": "BT Mouse",
+            "Manufacturer Contact Information": "Offbeat Electronics Pvt Ltd INDIA",
+            "Packer Contact Information": "Shopper's Cloud Bengaluru KA INDIA",
+            "Manufacturer Part Number": "OBSCDASHSIL",
+            "Warranty Description": "1 year Manufacturer's warranty",
+            "ASIN": "B0CRR6DK7V"
           }
-        },
-        "colour": "silver",
-        "hard drive size": "1 tb",
-        "operating system": "windows 11 home",
-        "other special features of the product": "anti glare coating, backlit keyboard",
-        "graphics description": "integrated",
-        "graphics co processor": "qualcomm adreno gpu",
-        "hard disk description": "ssd",
-        "item weight": "1.35 kilograms",
-        "video processor": "qualcomm",
-        "specific uses for product": "business, multimedia",
-        "webcam capability": "yes",
-        "automatic backup software included": "microsoft office",
-        "form factor": "laptop",
-        "hard drive interface": "usb",
-        "graphics ram type": "vram",
-        "compatible devices": "keyboards",
-        "warranty type": "limited",
-        "item dimensions l x w x thickness": "21.5l x 1.9w x 36th centimeters",
-        "video output": "displayport",
-        "screen size": "35.6 centimetres",
-        "scanner resolution": "1920 x 1200 pixels",
-        "native resolution": "1920 x 1200 pixels",
-        "display type": "lcd",
-        "maximum display resolution": "1920 x 1200 pixels",
-        "display technology": "oled",
-        "ram memory installed": "16 gb",
-        "ram memory technology": "lpddr5x",
-        "ram memory maximum size": "16 gb",
-        "memory speed": "8448 mhz",
-        "system ram type": "ddr5 ram",
-        "drivememory storage capacity": "1 tb",
-        "available memory slots": "yes",
-        "battery cell type": "lithium ion",
-        "battery life": "34 hours",
-        "lithium battery energy content": "59 watt hours",
-        "human interface types": "keyboard",
-        "keyboard description": "backlit",
-        "processor type": "snapdragon",
-        "processor speed": "3 ghz",
-        "processor count": "1",
-        "processor brand": "qualcomm",
-        "cpu model number": "x1-26- 100",
-        "cpu model generation": "8th gen",
-        "cpu model speed maximum": "3 ghz",
-        "brand name": "hp",
-        "model name": "hp laptop",
-        "country of origin": "china",
-        "model year": "2025",
-        "model number": "c08q7pa",
-        "box contents": "laptop, power adapter, user manual",
-        "manufacturer": "hp, hp india sales pvt. ltd.",
-        "unit count": "1.0 count",
-        "upc": "199251826924",
-        "number of items": "1",
-        "importer contact information": "hp india sales private limited, no. 24, kothari arena, hosur main road, adugodi, bangalore, karnataka, india, 560030",
-        "item type name": "laptop",
-        "manufacturer contact information": "hp india sales pvt. ltd.",
-        "packer contact information": "hp india sales pvt. ltd.",
-        "warranty description": "1 year manufacturer warranty on the device from the date of purchase. in case of any technical/product related queries, please call 1800-258-7170 or 1860-258-3079",
-        "manufacturer part number": "c08q7pa",
-        "network connectivity technology": "bluetooth, usb, wi-fi",
-        "wireless technology": "wi-fi",
-        "computer wireless type": "bluetooth",
-        "bluetooth support?": "yes",
-        "wi-fi generation": "wifi 6e",
-        "total usb ports": "3",
-        "hardware interface": "usb",
-        "number of ports": "3",
-        "total hdmi port": "1"
+        }
       },
       "fingerprint": {
         "category": "laptop",
-        "brand": "hp",
-        "family": "omnibook",
-        "model_name": "hp laptop",
+        "brand": "offbeat",
+        "family": null,
+        "model_name": "offbeat",
         "generation": null,
-        "chip": "qualcomm x1-26- 100",
-        "ram_gb": 16,
-        "storage_gb": 1024,
+        "chip": null,
+        "ram_gb": null,
+        "storage_gb": null,
         "storage_type": "ssd",
-        "screen_size_inches": 14.0,
-        "gpu_model": "qualcomm",
-        "manufacturer_part_number": null,
+        "screen_size_inches": null,
+        "gpu_model": null,
+        "manufacturer_part_number": "obscdashsil",
         "gtin": null,
         "attributes": {
-          "ram_gb": 16,
-          "storage_gb": 1024,
-          "storage_type": "ssd",
-          "cpu_model": "qualcomm x1-26- 100",
-          "gpu_model": "qualcomm",
-          "screen_size_inches": 14.0,
-          "operating_system": "windows 11 home",
-          "color": "silver",
-          "ram_type": "lpddr5x",
-          "display_type": "oled",
-          "keyboard_backlight": true,
-          "weight_kg": 1.29,
-          "battery_wh": 59.0,
-          "wifi_standard": "wi-fi 6e",
-          "model_number": "c08q7pa",
-          "warranty": "1 year manufacturer warranty on the device from the date of purchase. in case of any technical/product related queries, please call 1800-258-7170 or 1860-258-3079",
-          "spec_sections": {
-            "Additional details": {
-              "Colour": "Silver",
-              "Hard Drive Size": "1 TB",
-              "Operating System": "Windows 11 Home",
-              "Other Special Features of the Product": "Anti Glare Coating, Backlit Keyboard",
-              "Graphics Description": "Integrated",
-              "Graphics Co Processor": "Qualcomm Adreno GPU",
-              "Hard Disk Description": "SSD",
-              "Item Weight": "1.35 Kilograms",
-              "Video Processor": "Qualcomm",
-              "Specific Uses For Product": "Business, Multimedia",
-              "Webcam Capability": "Yes",
-              "Automatic Backup Software Included": "Microsoft Office",
-              "Form Factor": "laptop",
-              "Hard Drive Interface": "USB",
-              "Graphics Ram Type": "VRAM",
-              "Compatible Devices": "Keyboards",
-              "Warranty Type": "Limited",
-              "Item Dimensions L x W x Thickness": "21.5L x 1.9W x 36Th Centimeters",
-              "Video Output": "DisplayPort"
-            },
-            "Display": {
-              "Screen Size": "35.6 Centimetres",
-              "Scanner Resolution": "1920 x 1200 pixels",
-              "Native Resolution": "1920 x 1200 pixels",
-              "Display Type": "LCD",
-              "Maximum Display Resolution": "1920 x 1200 Pixels",
-              "Display Technology": "OLED"
-            },
-            "Memory": {
-              "RAM Memory Installed": "16 GB",
-              "RAM Memory Technology": "LPDDR5X",
-              "Ram Memory Maximum Size": "16 GB",
-              "Memory Speed": "8448 MHz",
-              "System RAM Type": "DDR5 RAM",
-              "DriveMemory Storage Capacity": "1 TB",
-              "Available Memory Slots": "Yes"
-            },
-            "Battery": {
-              "Battery Cell Type": "Lithium Ion",
-              "Battery Life": "34 Hours",
-              "Lithium Battery Energy Content": "59 Watt Hours"
-            },
-            "Input Devices": {
-              "Human Interface Types": "Keyboard",
-              "Keyboard Description": "Backlit"
-            },
-            "Processor": {
-              "Processor Type": "Snapdragon",
-              "Processor Speed": "3 GHz",
-              "Processor Count": "1",
-              "Processor Brand": "Qualcomm",
-              "CPU Model Number": "X1-26- 100",
-              "CPU Model Generation": "8th Gen",
-              "CPU Model Speed Maximum": "3 GHz"
-            },
-            "Item details": {
-              "Brand Name": "HP",
-              "Model Name": "HP Laptop",
-              "Country of Origin": "China",
-              "Model Year": "2025",
-              "Model Number": "C08Q7PA",
-              "Box Contents": "Laptop, Power Adapter, User manual",
-              "Manufacturer": "HP, HP India Sales Pvt. Ltd.",
-              "Unit Count": "1.0 Count",
-              "UPC": "199251826924",
-              "Number of Items": "1",
-              "Importer Contact Information": "HP India Sales Private Limited, No. 24, Kothari Arena, Hosur Main Road, Adugodi, Bangalore, Karnataka, India, 560030",
-              "Item Type Name": "Laptop",
-              "Manufacturer Contact Information": "HP India Sales Pvt. Ltd.",
-              "Packer Contact Information": "HP India Sales Pvt. Ltd.",
-              "Warranty Description": "1 year manufacturer warranty on the device from the date of purchase. In case of any technical/product related queries, please call 1800-258-7170 or 1860-258-3079",
-              "Manufacturer Part Number": "C08Q7PA",
-              "ASIN": "B0F8P844W2"
-            },
-            "Connectivity": {
-              "Network Connectivity Technology": "Bluetooth, USB, Wi-Fi",
-              "Wireless Technology": "Wi-Fi",
-              "Computer Wireless Type": "Bluetooth",
-              "Bluetooth support?": "Yes",
-              "Wi-Fi Generation": "Wifi 6e"
-            },
-            "Ports & Slots": {
-              "Total USB Ports": "3",
-              "Hardware Interface": "USB",
-              "Number Of Ports": "3",
-              "Total HDMI Port": "1"
-            }
-          },
-          "colour": "silver",
-          "hard drive size": "1 tb",
-          "operating system": "windows 11 home",
-          "other special features of the product": "anti glare coating, backlit keyboard",
-          "graphics description": "integrated",
-          "graphics co processor": "qualcomm adreno gpu",
-          "hard disk description": "ssd",
-          "item weight": "1.35 kilograms",
-          "video processor": "qualcomm",
-          "specific uses for product": "business, multimedia",
-          "webcam capability": "yes",
-          "automatic backup software included": "microsoft office",
-          "form factor": "laptop",
-          "hard drive interface": "usb",
-          "graphics ram type": "vram",
-          "compatible devices": "keyboards",
-          "warranty type": "limited",
-          "item dimensions l x w x thickness": "21.5l x 1.9w x 36th centimeters",
-          "video output": "displayport",
-          "screen size": "35.6 centimetres",
-          "scanner resolution": "1920 x 1200 pixels",
-          "native resolution": "1920 x 1200 pixels",
-          "display type": "lcd",
-          "maximum display resolution": "1920 x 1200 pixels",
-          "display technology": "oled",
-          "ram memory installed": "16 gb",
-          "ram memory technology": "lpddr5x",
-          "ram memory maximum size": "16 gb",
-          "memory speed": "8448 mhz",
-          "system ram type": "ddr5 ram",
-          "drivememory storage capacity": "1 tb",
-          "available memory slots": "yes",
-          "battery cell type": "lithium ion",
-          "battery life": "34 hours",
-          "lithium battery energy content": "59 watt hours",
-          "human interface types": "keyboard",
-          "keyboard description": "backlit",
-          "processor type": "snapdragon",
-          "processor speed": "3 ghz",
-          "processor count": "1",
-          "processor brand": "qualcomm",
-          "cpu model number": "x1-26- 100",
-          "cpu model generation": "8th gen",
-          "cpu model speed maximum": "3 ghz",
-          "brand name": "hp",
-          "model name": "hp laptop",
-          "country of origin": "china",
-          "model year": "2025",
-          "model number": "c08q7pa",
-          "box contents": "laptop, power adapter, user manual",
-          "manufacturer": "hp, hp india sales pvt. ltd.",
-          "unit count": "1.0 count",
-          "upc": "199251826924",
-          "number of items": "1",
-          "importer contact information": "hp india sales private limited, no. 24, kothari arena, hosur main road, adugodi, bangalore, karnataka, india, 560030",
-          "item type name": "laptop",
-          "manufacturer contact information": "hp india sales pvt. ltd.",
-          "packer contact information": "hp india sales pvt. ltd.",
-          "warranty description": "1 year manufacturer warranty on the device from the date of purchase. in case of any technical/product related queries, please call 1800-258-7170 or 1860-258-3079",
-          "manufacturer part number": "c08q7pa",
-          "network connectivity technology": "bluetooth, usb, wi-fi",
-          "wireless technology": "wi-fi",
-          "computer wireless type": "bluetooth",
-          "bluetooth support?": "yes",
-          "wi-fi generation": "wifi 6e",
-          "total usb ports": "3",
-          "hardware interface": "usb",
-          "number of ports": "3",
-          "total hdmi port": "1"
+          "operating_system": "linux, windows 10, windows 8",
+          "color": "dash",
+          "model_number": "obscdashsil",
+          "warranty": "1 year manufacturer's warranty"
         }
       },
       "offers": [
         {
           "source": "amazon",
-          "source_product_id": "B0F8P844W2",
-          "source_url": "https://www.amazon.in/dp/B0F8P844W2",
-          "title": "HP OmniBook 5 OLED (Previously Pavilion), Snapdragon X Processor 45 Tops (16GB LPDDR5x, 1 TB SSD), 2K 14&#39;&#39;/35.6cm, Win11, Office24, Silver, 1.29kg, he0015QU, Multi-Day Battery, AI Laptop",
-          "price_paise": 8599000,
-          "mrp_paise": 8822500,
+          "source_product_id": "B0CRR6DK7V",
+          "source_url": "https://www.amazon.in/dp/B0CRR6DK7V",
+          "title": "Offbeat Dash Dual Bluetooth 5.1+ 5.0 &amp; 2.4Ghz Wireless, Type-C Rechargeable Silent Click Mouse, Triple Device connectivity Windows, Mac, iOS, Android (Black)",
+          "image_urls": [
+            "https://m.media-amazon.com/images/I/31UTgGQ3bEL._SY300_SX300_QL70_FMwebp_.jpg",
+            "https://m.media-amazon.com/images/I/61NQNEFH6AL._SL1500_.jpg"
+          ],
+          "price_paise": 89900,
+          "mrp_paise": 149900,
           "coupon_price_paise": null,
           "in_stock": true,
           "seller": "Clicktech Retail Private Ltd",
-          "rating": 4.0,
-          "review_count": 134,
-          "quality_status": "VALID",
-          "quality_score": 100,
-          "quality_flags": [],
-          "observed_at": "2026-09-04T18:08:34.701078Z"
+          "rating": 4.4,
+          "review_count": 150,
+          "quality_status": "SUSPICIOUS",
+          "quality_score": 60,
+          "quality_flags": [
+            "price \u20b9899.00 is below minimum sanity threshold \u20b910,000.00"
+          ],
+          "observed_at": "2026-09-23T15:21:52.414081Z"
         }
       ],
       "review_candidates": [],
-      "best_price_paise": 8599000,
+      "best_price_paise": 89900,
       "best_source": "amazon",
-      "max_price_paise": 8599000,
+      "max_price_paise": 89900,
       "price_spread_paise": 0,
       "savings_paise": 0
     },
     {
-      "cluster_id": "clus_1c7c234ecbbd0420",
+      "cluster_id": "clus_d06b045673af16a9",
       "category": "laptop",
-      "brand": "apple",
-      "model_name": "macbook air m5",
+      "brand": "acer",
+      "model_name": "aspire 5",
       "attributes": {
         "ram_gb": 16,
         "storage_gb": 512,
-        "storage_type": "ssd",
-        "cpu_model": "apple m5 m5",
-        "gpu_model": "not available",
-        "screen_size_inches": 13.6,
-        "operating_system": "macos tahoe",
-        "color": "midnight",
+        "storage_type": "SSD",
+        "cpu_model": "Intel Core Ultra 5 125H",
+        "gpu_model": "Intel UHD Graphics",
+        "screen_size_inches": 14.0,
+        "ram_type": "DDR5",
+        "operating_system": "Windows 11 Home",
+        "color": "Silver",
+        "display_type": "IPS LCD",
         "keyboard_backlight": true,
-        "webcam_resolution": "1080p fhd",
-        "weight_kg": 1.23,
-        "wifi_standard": "wi-fi 7",
-        "model_number": "mdhe4hn/a",
-        "warranty": "12 months",
+        "weight_kg": 1.2,
+        "battery_wh": 52.0,
+        "wifi_standard": "Wi-Fi 6",
+        "display_resolution": "WUXGA",
+        "model_number": "UN.370SI.002",
+        "warranty": "12 Months",
         "spec_sections": {
           "Laptop Category": {
-            "Laptop Type": "MacBook",
-            "Suitable For": "Work | Gaming | Entertainment | Everyday Use",
+            "Laptop Type": "Laptop",
+            "Suitable For": "Entertainment | Office Use | Everyday Use | Work | Home",
             "Launch Year": "2026"
           },
           "Manufacturer Details": {
-            "Brand": "Apple",
-            "Model Series": "MacBook Air M5",
-            "Model Number": "MDHE4HN/A"
+            "Brand": "Acer",
+            "Model Series": "Aspire 5",
+            "Model Number": "UN.370SI.002"
           },
           "Product Dimensions (Open)": {
-            "Dimensions In CM (WxDxH)": "30.41 x 21.5 x 1.13",
-            "Product Weight": "1.23 Kg",
-            "Dimensions In Inches (WxDxH)": "11.97 x 8.46 x 0.44"
+            "Dimensions In CM (WxDxH)": "31.25 x 21.85 x 1.75",
+            "Product Weight": "1.2 Kg",
+            "Dimensions In Inches (WxDxH)": "12.3 x 8.6 x 0.69"
           },
           "Operating System": {
-            "OS Type": "Mac OS",
-            "Operating System": "macOS Tahoe"
+            "OS Type": "Windows OS",
+            "Operating System": "Windows 11 Home"
           },
           "Laptop Screen Specifications": {
-            "Display Size (In Inches)": "13.6 Inches",
-            "Display Size (In Cms)": "34.46 cm",
-            "Display Type": "Liquid Retina",
-            "Screen Resolution": "2560 x 1664 pixels",
+            "Display Size (In Inches)": "14 Inches",
+            "Display Size (In Cms)": "35.6 cm",
+            "Display Type": "IPS Screen",
+            "Screen Resolution": "1920 x 1200 pixels",
+            "Aspect Ratio": "16.10",
             "Touch Screen": "No",
-            "Additional Screen Specifications": "LED-backlit display with IPS Technology, 224 Pixels Per Inch, 500 Nits Brightness, 1 Billion Colors, Wide Color (P3), True Tone Technology, Video Playback: Supported formats include HEVC, H.264, AV1 and ProRes, ProRes RAW, HDR with Dolby Vision, HDR10+/HDR10 and HLG"
-          },
-          "Display Connectivity": {
-            "Display Connectivity": "iPhone Mirroring"
+            "Refresh Rate": "60 Hz",
+            "Additional Screen Specifications": "WUXGA"
           },
           "Laptop Processor Details": {
-            "Processor Brand": "Apple",
-            "Processor Type": "M5",
-            "Processor Variant": "M5",
-            "Number Of Cores": "10-cores"
+            "Processor Brand": "Intel",
+            "Processor Type": "Core Ultra 5",
+            "Processor Variant": "125H",
+            "Number Of Cores": "14-cores",
+            "Processor Speed": "4.5 GHz",
+            "Maximum Turbo Speed": "4.5 GHz",
+            "Cache": "18 MB"
           },
           "Internal Memory": {
-            "Type of RAM": "UnifiedMemory",
-            "RAM": "16GB",
-            "Maximum RAM": "32 GB",
-            "RAM Configuration": "Configurable to: 24GB or 32GB"
+            "Type of RAM": "LPDDR5",
+            "RAM": "16GB"
           },
           "Storage Specification": {
-            "Storage Type": "SSD",
+            "Storage Type": "M.2 PCIe NVMe SSD",
             "HDD Capacity": "No HDD",
             "SSD Capacity": "512GB",
-            "Expandable Upto": "4000 GB"
+            "Expandable Upto": "1024 GB"
           },
           "Graphic Processor": {
-            "GPU Brand": "Apple"
+            "GPU Brand": "Intel",
+            "GPU Model": "Intel UHD Graphics",
+            "Graphic Processor Type": "Integrated",
+            "Dedicated Graphics Memory": "Shared Memory"
           },
           "Sound": {
-            "Additional Audio Features": "Immersive Sound System, Built-in Speakers, Three-mic Array with Directional Beamforming, Voice Isolation & Wide Spectrum Microphone Modes",
-            "Audio Technology": "Dolby Digital, Dolby Digital Plus and Dolby Atmos, Spatial Audio with Dynamic Head Tracking",
-            "Speaker Type": "Quad Speakers",
-            "Music Playback Format Supported": "AAC, MP3, Apple Lossless, FLAC",
-            "Audio Jack Port": "3.5mm - Headphone Port"
+            "Speaker Type": "Built-in Speakers",
+            "Audio Jack Port": "3.5mm - Headphone/Microphone Combo Port"
           },
           "Ports & Slots": {
-            "Aux Port Type": "3.5mm - Headphone Port",
-            "Number Of USB Ports": "2 x USB 4",
-            "Type of DisplayPort": "DisplayPort",
-            "Thunderbolt Port Type": "Thunderbolt 4",
-            "HDMI Type": "No HDMI",
-            "USB Types Supported": "USB Type C",
-            "Number Of Thunderbolt Ports": "2"
+            "Aux Port Type": "3.5mm - Headphone/Microphone Combo Port",
+            "Number Of USB Ports": "4",
+            "Number Of HDMI Ports": "1",
+            "HDMI Type": "HDMI",
+            "Ethernet Supported": "Yes",
+            "USB Types Supported": "USB 3.2 (Type-C) | USB 3.2",
+            "External Card Supported": "1 x SD Card Reader",
+            "Other Ports & Slots": "1 x Charging Port"
           },
           "Network Connectivity": {
             "Bluetooth Supported": "Yes",
-            "WiFi Specifications": "Wi-Fi 7, 802.11be 2x2",
+            "WiFi Specifications": "Wi-Fi 6",
             "Wi-Fi Supported": "Yes",
-            "Bluetooth Specifications": "Bluetooth 6.0"
+            "Bluetooth Specifications": "Bluetooth 5.1",
+            "Wi-Fi Features": "IEEE802.11 a/b/g /n/ac/ax"
           },
           "Laptop Camera Type": {
             "Camera Type": "Webcam",
-            "Camera Resolution": "1080p",
-            "Camera Features": "12MP Center Stage Camera, Advanced Image Signal Processor with Computational Video, Desk View"
+            "Camera Features": "HD Camera with Shutter"
           },
           "Keyboard Specification": {
             "Type of Keyboard": "Backlit Keyboard",
-            "Keyboard Configuration": "Ambient Light Sensor, 78 (ANSI) or 79 (ISO) Keys Including 12 Full-height Function Keys"
-          },
-          "Mouse Specification": {
-            "Type of Mouse": "Force Touch Trackpad"
+            "Keyboard Configuration": "Copilot+Key"
           },
           "Access Control And Security": {
-            "Lock": "Password | Fingerprint"
+            "Lock": "Kensington Lock Slot | Password"
           },
           "Additional Features": {
-            "Included Software": "Built-in Apps",
-            "Additional Features": "Apple Intelligence, Live Translation, Universal Clipboard, Live Activities, Markup and Sketch, Apple N1 Wireless Chip, 4 Super Cores and 6 Efficiency Cores, 8\u2011core GPU, Neural Accelerators, Hardware-Accelerated Ray Tracing, 16-core Neural Engine, 153GB/s Memory Bandwidth, Media Engine: Video Decode Engine, ProRes Encode and Decode Engine, AV1 Decode, Thread Networking Technology, VoiceOver, Zoom, Motion, Display and Text Settings, Accessibility Reader, Voice Control, Switch Control, Closed Captions, Live Captions, Personal Voice, Live Speech"
+            "Included Software": "Microsoft Office",
+            "Additional Features": "Ultra Slim Chassis, 180 Degree Hinge"
           },
           "Laptop Battery": {
             "Battery Type": "Non-Removable",
-            "Battery Technology": "Lithium Polymer",
-            "Standard Battery Life": "Up to 18 Hours Video Streaming, Upto 15 Hours Wireless Web"
+            "Battery Technology": "Lithium",
+            "Number of Cells": "3 Cell",
+            "Standard Battery Life": "52 Watt Hours, Upto 7 Hours Depend on the Use"
           },
           "Charging": {
-            "Fast Charging Capability": "Yes",
-            "Battery Charge Time": "Charge 50% in Just 30 Minutes",
-            "Additional Charging Features": "Built-in 53.8 Watt Hour Lithium Polymer Battery, 30W USB-C Power Adapter (included with M5 with 8-core GPU), Fast-charge Capable with 70W or Higher USB PD Power Source"
+            "Charging Pin Type": "Round Pin",
+            "Fast Charging Capability": "No"
           },
           "Plug Details": {
-            "Voltage Rating": "100V - 240V AC",
-            "Power Pin Type": "MagSafe 3",
-            "Frequency": "50Hz - 60Hz"
+            "Power Consumption": "65 Watts"
           },
           "Materials & Durability": {
             "Body Material": "Aluminum"
           },
           "Aesthetics": {
-            "Brand Color": "Midnight",
-            "Color": "BLACK"
+            "Brand Color": "Silver",
+            "Color": "SILVER"
           },
           "In The Box": {
             "Documents": "1 x Warranty Card",
             "Main product": "1 x Laptop U",
-            "Accessories": "1 x 30W USB-C Power Adapter, 1 x USB-C to MagSafe 3 Cable (2M)",
-            "Package Includes": "1 x Laptop, 1 x 30W USB-C Power Adapter, 1 x USB-C to MagSafe 3 Cable (2M), 1 x Warranty Card",
+            "Accessories": "1 x Charging Adapter",
+            "Package Includes": "1 x Laptop, 1 x Charging Adapter, 1 x Warranty Card",
             "Generic Name": "Laptop"
           },
           "After Sales & Services": {
@@ -577,430 +283,95 @@
             "Standard Warranty Excludes": "Physical Damage",
             "Warranty on Accessories": "6 Months"
           },
-          "Certification": {
-            "Certification": "Yes",
-            "Energy Star Certification": "Yes",
-            "Certifications": "Energy Star Certification"
-          },
           "Key Features": {
-            "Processor": "Apple M5",
-            "Display": "34.46 cms (13.6 inches), Liquid Retina",
-            "Memory": "16GB Unified Memory RAM, 512GB SSD ROM",
-            "OS": "macOS Tahoe",
-            "Feature 5": "Apple Intelligence, Touch ID, Ambient Light Sensor",
-            "Warranty": "1 Year Limited"
+            "Display": "35.6 cms (14 inches), WUXGA IPS",
+            "Memory": "16GB LPDDR5 RAM, 512GB SSD ROM",
+            "Processor": "Intel Core 5",
+            "OS": "Windows 11 Home",
+            "Graphics": "Intel UHD",
+            "Included Software": "MS Office",
+            "Feature 7": "Copilot+Key, Kensington Lock Slot, Backlit Keyboard"
           },
           "Overview": {
-            "Description": "Apple M5 Architecture Powered by the Apple M5 chip, this Apple MacBook Air M5 13.6-inch Laptop delivers balanced performance across everyday and creative workloads. With a 10-core CPU featuring 4 performance cores and 6 efficiency cores, along with an 8-core GPU and 16-core Neural Engine, it supports smooth multitasking and graphics processing. In addition, 153GB/s memory bandwidth enables rapid data movement across components. Therefore, editing, productivity tasks, and AI-driven applications operate with steady responsiveness. Unified 16GB Memory Equipped with 16GB unified memory, this 13.6-inch laptop enables efficient data sharing between the CPU and GPU within a single architecture. Thus, handling multiple applications, editing high-resolution content, and managing background tasks remains fluid during daily workflows. Fast 512GB SSD Designed with a 512GB SSD, this MacBook provides dependable storage for documents, media, and project files. Therefore, system startup, application launches, and file transfers occur quickly, supporting consistent productivity throughout the day. Advanced macOS Tahoe Integration Running on macOS Tahoe, this laptop delivers a refined interface, improved productivity tools, and seamless integration with the Apple ecosystem. Consequently, everyday tasks such as multitasking, file management, and device syncing become smoother and more efficient, enhancing the overall user experience. Liquid Retina Display Featuring a 13.6-inch Liquid Retina display with 2560x1664 native resolution at 224 pixels per inch, this laptop delivers sharp visuals and detailed text clarity. In addition, IPS technology and up to 500 nits brightness help maintain clear visibility in various lighting conditions. Hence, reviewing presentations, streaming content, and creative editing feels visually precise. All-Day Battery Support Fitted with a battery capable of up to 18 hours of video streaming and up to 15 hours of wireless web usage, this laptop supports extended operation. Thus, you can work, browse, and stream for long periods without frequent charging interruptions. Fast MagSafe Charging Supporting fast charging with a 70W or higher USB PD power source and featuring a MagSafe 3 charging port, this laptop reduces downtime between sessions. So, you can quickly regain battery power and resume tasks efficiently. 12MP Center Stage Camera Integrated with a 12MP Center Stage camera, this MacBook ensures clear and well-balanced video output during calls and recordings. In addition, automatic framing keeps you positioned within the frame as you move. Therefore, virtual meetings feel natural and visually steady during professional interactions. Full HD Recording Support Supporting 1080p HD video recording along with Desk View functionality, this Apple laptop enhances presentation flexibility during calls. Thus, you can share workspace views clearly while maintaining sharp on-screen video quality for seamless communication."
+            "Description": "Efficient Intel Core Ultra 5 Performance Powered by the Intel Core Ultra 5 125H processor with speeds ranging Upto 4.5 GHz, this acer Aspire 5 14-inch Windows Laptop delivers smooth and efficient performance for everyday computing. Consequently, it can handle multitasking, web browsing, content streaming, document editing, and productivity tasks with responsive speed and stability for work, study, and entertainment needs. Modern Windows 11 Home Experience Preloaded with Windows 11 Home, this Windows laptop offers a clean and intuitive interface designed to enhance productivity and ease of use. Thus, users benefit from improved multitasking features, seamless app management, and better integration with Microsoft services, making everyday tasks more organised and efficient. High-Speed 16GB Memory Equipped with 16GB LPDDR5 RAM, this 14-inch laptop ensures fast data access and smooth system responsiveness during multitasking. Therefore, switching between applications, working on multiple browser tabs, and handling large files remains seamless, supporting consistent performance for both professional and personal use. Fast 512GB SSD Storage Featuring a 512GB M.2 PCIe SSD, this laptop provides quick boot times, rapid file access, and ample storage for essential data. Moreover, it allows users to store documents, multimedia content, applications, and work files efficiently while leaving room for future storage upgrades. Crisp 14-inch Display Featuring a 14-inch WUXGA IPS display with Acer ComfyView LED-backlit TFT LCD technology, this Windows laptop delivers sharp visuals with enhanced clarity and comfortable viewing. Thus, whether working on spreadsheets, attending online classes, or streaming content, the display ensures clear detail and reduced eye strain during extended use. Long-Lasting 54Wh Battery Backup Equipped with a 54Wh battery, this laptop offers reliable power backup for extended usage throughout the day. Additionally, it supports uninterrupted work, study sessions, and entertainment on the go, reducing the need for frequent charging and ensuring greater mobility and convenience. Comfortable Backlit Keyboard Design Featuring an Acer backlit keyboard, this acer laptop ensures comfortable typing even in low-light environments. Additionally, it enhances productivity during late-night work sessions or dimly lit settings, allowing users to work efficiently and accurately at any time."
+          },
+          "Other Specifications": {
+            "optical drive": "0",
+            "battery charge time": "0",
+            "country of origin": "India",
+            "country of brand origin": "Taiwan"
           }
         },
-        "laptop type": "macbook",
-        "suitable for": "work | gaming | entertainment | everyday use",
-        "launch year": "2026",
-        "brand": "apple",
-        "model series": "macbook air m5",
-        "model number": "mdhe4hn/a",
-        "dimensions in cm (wxdxh)": "30.41 x 21.5 x 1.13",
-        "product weight": "1.23 kg",
-        "dimensions in inches (wxdxh)": "11.97 x 8.46 x 0.44",
-        "os type": "mac os",
-        "operating system": "macos tahoe",
-        "display size (in inches)": "13.6 inches",
-        "display size (in cms)": "34.46 cm",
-        "display type": "liquid retina",
-        "screen resolution": "2560 x 1664 pixels",
-        "aspect ratio": "0",
-        "touch screen": "no",
-        "refresh rate": "0",
-        "additional screen specifications": "led-backlit display with ips technology, 224 pixels per inch, 500 nits brightness, 1 billion colors, wide color (p3), true tone technology, video playback: supported formats include hevc, h.264, av1 and prores, prores raw, hdr with dolby vision, hdr10+/hdr10 and hlg",
-        "display connectivity": "iphone mirroring",
-        "processor brand": "apple",
-        "processor type": "m5",
-        "processor variant": "m5",
-        "number of cores": "10-cores",
-        "processor speed": "0",
-        "maximum turbo speed": "0",
-        "cache": "0",
-        "type of ram": "unifiedmemory",
-        "ram": "16gb",
-        "maximum ram": "32 gb",
-        "ram configuration": "configurable to: 24gb or 32gb",
-        "storage type": "ssd",
-        "hdd capacity": "no hdd",
-        "ssd capacity": "512gb",
-        "expandable upto": "4000 gb",
-        "optical drive": "0",
-        "gpu brand": "apple",
-        "gpu model": "not available",
-        "graphic processor type": "not available",
-        "dedicated graphics memory": "not available",
-        "additional audio features": "immersive sound system, built-in speakers, three-mic array with directional beamforming, voice isolation & wide spectrum microphone modes",
-        "audio technology": "dolby digital, dolby digital plus and dolby atmos, spatial audio with dynamic head tracking",
-        "speaker type": "quad speakers",
-        "music playback format supported": "aac, mp3, apple lossless, flac",
-        "audio jack port": "3.5mm - headphone port",
-        "aux port type": "3.5mm - headphone port",
-        "number of usb ports": "2 x usb 4",
-        "number of hdmi ports": "0",
-        "type of displayport": "displayport",
-        "thunderbolt port type": "thunderbolt 4",
-        "hdmi type": "no hdmi",
-        "usb types supported": "usb type c",
-        "number of thunderbolt ports": "2",
-        "bluetooth supported": "yes",
-        "wifi specifications": "wi-fi 7, 802.11be 2x2",
-        "wi-fi supported": "yes",
-        "bluetooth specifications": "bluetooth 6.0",
-        "camera type": "webcam",
-        "camera resolution": "1080p",
-        "camera features": "12mp center stage camera, advanced image signal processor with computational video, desk view",
-        "type of keyboard": "backlit keyboard",
-        "keyboard configuration": "ambient light sensor, 78 (ansi) or 79 (iso) keys including 12 full-height function keys",
-        "type of mouse": "force touch trackpad",
-        "lock": "password | fingerprint",
-        "included software": "built-in apps",
-        "additional features": "apple intelligence, live translation, universal clipboard, live activities, markup and sketch, apple n1 wireless chip, 4 super cores and 6 efficiency cores, 8\u2011core gpu, neural accelerators, hardware-accelerated ray tracing, 16-core neural engine, 153gb/s memory bandwidth, media engine: video decode engine, prores encode and decode engine, av1 decode, thread networking technology, voiceover, zoom, motion, display and text settings, accessibility reader, voice control, switch control, closed captions, live captions, personal voice, live speech",
-        "battery type": "non-removable",
-        "battery technology": "lithium polymer",
-        "number of cells": "0",
-        "standard battery life": "up to 18 hours video streaming, upto 15 hours wireless web",
-        "fast charging capability": "yes",
-        "battery charge time": "charge 50% in just 30 minutes",
-        "additional charging features": "built-in 53.8 watt hour lithium polymer battery, 30w usb-c power adapter (included with m5 with 8-core gpu), fast-charge capable with 70w or higher usb pd power source",
-        "voltage rating": "100v - 240v ac",
-        "power pin type": "magsafe 3",
-        "frequency": "50hz - 60hz",
-        "body material": "aluminum",
-        "brand color": "midnight",
-        "documents": "1 x warranty card",
-        "main product": "1 x laptop u",
-        "accessories": "1 x 30w usb-c power adapter, 1 x usb-c to magsafe 3 cable (2m)",
-        "package includes": "1 x laptop, 1 x 30w usb-c power adapter, 1 x usb-c to magsafe 3 cable (2m), 1 x warranty card",
-        "generic name": "laptop",
-        "warranty on main product": "12 months",
-        "warranty type": "carry-in",
-        "standard warranty includes": "manufacturing defects",
-        "standard warranty excludes": "physical damage",
-        "warranty on accessories": "6 months",
-        "certification": "yes",
-        "energy star certification": "yes",
-        "certifications": "energy star certification",
-        "country of origin": "china",
-        "country of brand origin": "usa",
-        "processor": "apple m5",
-        "display": "34.46 cms (13.6 inches), liquid retina",
-        "memory": "16gb unified memory ram, 512gb ssd rom",
-        "os": "macos tahoe"
+        "mpn": "UN.370SI.002",
+        "ean": "8906194458110",
+        "gtin": "8906194458110"
       },
       "fingerprint": {
         "category": "laptop",
-        "brand": "apple",
-        "family": "macbook air",
-        "model_name": "macbook air m5",
+        "brand": "acer",
+        "family": "aspire",
+        "model_name": "aspire 5",
         "generation": null,
-        "chip": "apple m5 m5",
+        "chip": "intel core ultra 5 125h",
         "ram_gb": 16,
         "storage_gb": 512,
         "storage_type": "ssd",
-        "screen_size_inches": 13.6,
-        "gpu_model": "not available",
-        "manufacturer_part_number": null,
-        "gtin": null,
+        "screen_size_inches": 14.0,
+        "gpu_model": "intel uhd graphics",
+        "manufacturer_part_number": "un.370si.002",
+        "gtin": "8906194458110",
         "attributes": {
-          "ram_gb": 16,
-          "storage_gb": 512,
-          "storage_type": "ssd",
-          "cpu_model": "apple m5 m5",
-          "gpu_model": "not available",
-          "screen_size_inches": 13.6,
-          "operating_system": "macos tahoe",
-          "color": "midnight",
+          "operating_system": "windows 11 home",
+          "color": "silver",
+          "ram_type": "ddr5",
+          "display_resolution": "wuxga",
+          "display_type": "ips lcd",
           "keyboard_backlight": true,
-          "webcam_resolution": "1080p fhd",
-          "weight_kg": 1.23,
-          "wifi_standard": "wi-fi 7",
-          "model_number": "mdhe4hn/a",
-          "warranty": "12 months",
-          "spec_sections": {
-            "Laptop Category": {
-              "Laptop Type": "MacBook",
-              "Suitable For": "Work | Gaming | Entertainment | Everyday Use",
-              "Launch Year": "2026"
-            },
-            "Manufacturer Details": {
-              "Brand": "Apple",
-              "Model Series": "MacBook Air M5",
-              "Model Number": "MDHE4HN/A"
-            },
-            "Product Dimensions (Open)": {
-              "Dimensions In CM (WxDxH)": "30.41 x 21.5 x 1.13",
-              "Product Weight": "1.23 Kg",
-              "Dimensions In Inches (WxDxH)": "11.97 x 8.46 x 0.44"
-            },
-            "Operating System": {
-              "OS Type": "Mac OS",
-              "Operating System": "macOS Tahoe"
-            },
-            "Laptop Screen Specifications": {
-              "Display Size (In Inches)": "13.6 Inches",
-              "Display Size (In Cms)": "34.46 cm",
-              "Display Type": "Liquid Retina",
-              "Screen Resolution": "2560 x 1664 pixels",
-              "Touch Screen": "No",
-              "Additional Screen Specifications": "LED-backlit display with IPS Technology, 224 Pixels Per Inch, 500 Nits Brightness, 1 Billion Colors, Wide Color (P3), True Tone Technology, Video Playback: Supported formats include HEVC, H.264, AV1 and ProRes, ProRes RAW, HDR with Dolby Vision, HDR10+/HDR10 and HLG"
-            },
-            "Display Connectivity": {
-              "Display Connectivity": "iPhone Mirroring"
-            },
-            "Laptop Processor Details": {
-              "Processor Brand": "Apple",
-              "Processor Type": "M5",
-              "Processor Variant": "M5",
-              "Number Of Cores": "10-cores"
-            },
-            "Internal Memory": {
-              "Type of RAM": "UnifiedMemory",
-              "RAM": "16GB",
-              "Maximum RAM": "32 GB",
-              "RAM Configuration": "Configurable to: 24GB or 32GB"
-            },
-            "Storage Specification": {
-              "Storage Type": "SSD",
-              "HDD Capacity": "No HDD",
-              "SSD Capacity": "512GB",
-              "Expandable Upto": "4000 GB"
-            },
-            "Graphic Processor": {
-              "GPU Brand": "Apple"
-            },
-            "Sound": {
-              "Additional Audio Features": "Immersive Sound System, Built-in Speakers, Three-mic Array with Directional Beamforming, Voice Isolation & Wide Spectrum Microphone Modes",
-              "Audio Technology": "Dolby Digital, Dolby Digital Plus and Dolby Atmos, Spatial Audio with Dynamic Head Tracking",
-              "Speaker Type": "Quad Speakers",
-              "Music Playback Format Supported": "AAC, MP3, Apple Lossless, FLAC",
-              "Audio Jack Port": "3.5mm - Headphone Port"
-            },
-            "Ports & Slots": {
-              "Aux Port Type": "3.5mm - Headphone Port",
-              "Number Of USB Ports": "2 x USB 4",
-              "Type of DisplayPort": "DisplayPort",
-              "Thunderbolt Port Type": "Thunderbolt 4",
-              "HDMI Type": "No HDMI",
-              "USB Types Supported": "USB Type C",
-              "Number Of Thunderbolt Ports": "2"
-            },
-            "Network Connectivity": {
-              "Bluetooth Supported": "Yes",
-              "WiFi Specifications": "Wi-Fi 7, 802.11be 2x2",
-              "Wi-Fi Supported": "Yes",
-              "Bluetooth Specifications": "Bluetooth 6.0"
-            },
-            "Laptop Camera Type": {
-              "Camera Type": "Webcam",
-              "Camera Resolution": "1080p",
-              "Camera Features": "12MP Center Stage Camera, Advanced Image Signal Processor with Computational Video, Desk View"
-            },
-            "Keyboard Specification": {
-              "Type of Keyboard": "Backlit Keyboard",
-              "Keyboard Configuration": "Ambient Light Sensor, 78 (ANSI) or 79 (ISO) Keys Including 12 Full-height Function Keys"
-            },
-            "Mouse Specification": {
-              "Type of Mouse": "Force Touch Trackpad"
-            },
-            "Access Control And Security": {
-              "Lock": "Password | Fingerprint"
-            },
-            "Additional Features": {
-              "Included Software": "Built-in Apps",
-              "Additional Features": "Apple Intelligence, Live Translation, Universal Clipboard, Live Activities, Markup and Sketch, Apple N1 Wireless Chip, 4 Super Cores and 6 Efficiency Cores, 8\u2011core GPU, Neural Accelerators, Hardware-Accelerated Ray Tracing, 16-core Neural Engine, 153GB/s Memory Bandwidth, Media Engine: Video Decode Engine, ProRes Encode and Decode Engine, AV1 Decode, Thread Networking Technology, VoiceOver, Zoom, Motion, Display and Text Settings, Accessibility Reader, Voice Control, Switch Control, Closed Captions, Live Captions, Personal Voice, Live Speech"
-            },
-            "Laptop Battery": {
-              "Battery Type": "Non-Removable",
-              "Battery Technology": "Lithium Polymer",
-              "Standard Battery Life": "Up to 18 Hours Video Streaming, Upto 15 Hours Wireless Web"
-            },
-            "Charging": {
-              "Fast Charging Capability": "Yes",
-              "Battery Charge Time": "Charge 50% in Just 30 Minutes",
-              "Additional Charging Features": "Built-in 53.8 Watt Hour Lithium Polymer Battery, 30W USB-C Power Adapter (included with M5 with 8-core GPU), Fast-charge Capable with 70W or Higher USB PD Power Source"
-            },
-            "Plug Details": {
-              "Voltage Rating": "100V - 240V AC",
-              "Power Pin Type": "MagSafe 3",
-              "Frequency": "50Hz - 60Hz"
-            },
-            "Materials & Durability": {
-              "Body Material": "Aluminum"
-            },
-            "Aesthetics": {
-              "Brand Color": "Midnight",
-              "Color": "BLACK"
-            },
-            "In The Box": {
-              "Documents": "1 x Warranty Card",
-              "Main product": "1 x Laptop U",
-              "Accessories": "1 x 30W USB-C Power Adapter, 1 x USB-C to MagSafe 3 Cable (2M)",
-              "Package Includes": "1 x Laptop, 1 x 30W USB-C Power Adapter, 1 x USB-C to MagSafe 3 Cable (2M), 1 x Warranty Card",
-              "Generic Name": "Laptop"
-            },
-            "After Sales & Services": {
-              "Warranty on Main Product": "12 Months",
-              "Warranty Type": "Carry-In",
-              "Standard Warranty Includes": "Manufacturing Defects",
-              "Standard Warranty Excludes": "Physical Damage",
-              "Warranty on Accessories": "6 Months"
-            },
-            "Certification": {
-              "Certification": "Yes",
-              "Energy Star Certification": "Yes",
-              "Certifications": "Energy Star Certification"
-            },
-            "Key Features": {
-              "Processor": "Apple M5",
-              "Display": "34.46 cms (13.6 inches), Liquid Retina",
-              "Memory": "16GB Unified Memory RAM, 512GB SSD ROM",
-              "OS": "macOS Tahoe",
-              "Feature 5": "Apple Intelligence, Touch ID, Ambient Light Sensor",
-              "Warranty": "1 Year Limited"
-            },
-            "Overview": {
-              "Description": "Apple M5 Architecture Powered by the Apple M5 chip, this Apple MacBook Air M5 13.6-inch Laptop delivers balanced performance across everyday and creative workloads. With a 10-core CPU featuring 4 performance cores and 6 efficiency cores, along with an 8-core GPU and 16-core Neural Engine, it supports smooth multitasking and graphics processing. In addition, 153GB/s memory bandwidth enables rapid data movement across components. Therefore, editing, productivity tasks, and AI-driven applications operate with steady responsiveness. Unified 16GB Memory Equipped with 16GB unified memory, this 13.6-inch laptop enables efficient data sharing between the CPU and GPU within a single architecture. Thus, handling multiple applications, editing high-resolution content, and managing background tasks remains fluid during daily workflows. Fast 512GB SSD Designed with a 512GB SSD, this MacBook provides dependable storage for documents, media, and project files. Therefore, system startup, application launches, and file transfers occur quickly, supporting consistent productivity throughout the day. Advanced macOS Tahoe Integration Running on macOS Tahoe, this laptop delivers a refined interface, improved productivity tools, and seamless integration with the Apple ecosystem. Consequently, everyday tasks such as multitasking, file management, and device syncing become smoother and more efficient, enhancing the overall user experience. Liquid Retina Display Featuring a 13.6-inch Liquid Retina display with 2560x1664 native resolution at 224 pixels per inch, this laptop delivers sharp visuals and detailed text clarity. In addition, IPS technology and up to 500 nits brightness help maintain clear visibility in various lighting conditions. Hence, reviewing presentations, streaming content, and creative editing feels visually precise. All-Day Battery Support Fitted with a battery capable of up to 18 hours of video streaming and up to 15 hours of wireless web usage, this laptop supports extended operation. Thus, you can work, browse, and stream for long periods without frequent charging interruptions. Fast MagSafe Charging Supporting fast charging with a 70W or higher USB PD power source and featuring a MagSafe 3 charging port, this laptop reduces downtime between sessions. So, you can quickly regain battery power and resume tasks efficiently. 12MP Center Stage Camera Integrated with a 12MP Center Stage camera, this MacBook ensures clear and well-balanced video output during calls and recordings. In addition, automatic framing keeps you positioned within the frame as you move. Therefore, virtual meetings feel natural and visually steady during professional interactions. Full HD Recording Support Supporting 1080p HD video recording along with Desk View functionality, this Apple laptop enhances presentation flexibility during calls. Thus, you can share workspace views clearly while maintaining sharp on-screen video quality for seamless communication."
-            }
-          },
-          "laptop type": "macbook",
-          "suitable for": "work | gaming | entertainment | everyday use",
-          "launch year": "2026",
-          "brand": "apple",
-          "model series": "macbook air m5",
-          "model number": "mdhe4hn/a",
-          "dimensions in cm (wxdxh)": "30.41 x 21.5 x 1.13",
-          "product weight": "1.23 kg",
-          "dimensions in inches (wxdxh)": "11.97 x 8.46 x 0.44",
-          "os type": "mac os",
-          "operating system": "macos tahoe",
-          "display size (in inches)": "13.6 inches",
-          "display size (in cms)": "34.46 cm",
-          "display type": "liquid retina",
-          "screen resolution": "2560 x 1664 pixels",
-          "aspect ratio": "0",
-          "touch screen": "no",
-          "refresh rate": "0",
-          "additional screen specifications": "led-backlit display with ips technology, 224 pixels per inch, 500 nits brightness, 1 billion colors, wide color (p3), true tone technology, video playback: supported formats include hevc, h.264, av1 and prores, prores raw, hdr with dolby vision, hdr10+/hdr10 and hlg",
-          "display connectivity": "iphone mirroring",
-          "processor brand": "apple",
-          "processor type": "m5",
-          "processor variant": "m5",
-          "number of cores": "10-cores",
-          "processor speed": "0",
-          "maximum turbo speed": "0",
-          "cache": "0",
-          "type of ram": "unifiedmemory",
-          "ram": "16gb",
-          "maximum ram": "32 gb",
-          "ram configuration": "configurable to: 24gb or 32gb",
-          "storage type": "ssd",
-          "hdd capacity": "no hdd",
-          "ssd capacity": "512gb",
-          "expandable upto": "4000 gb",
-          "optical drive": "0",
-          "gpu brand": "apple",
-          "gpu model": "not available",
-          "graphic processor type": "not available",
-          "dedicated graphics memory": "not available",
-          "additional audio features": "immersive sound system, built-in speakers, three-mic array with directional beamforming, voice isolation & wide spectrum microphone modes",
-          "audio technology": "dolby digital, dolby digital plus and dolby atmos, spatial audio with dynamic head tracking",
-          "speaker type": "quad speakers",
-          "music playback format supported": "aac, mp3, apple lossless, flac",
-          "audio jack port": "3.5mm - headphone port",
-          "aux port type": "3.5mm - headphone port",
-          "number of usb ports": "2 x usb 4",
-          "number of hdmi ports": "0",
-          "type of displayport": "displayport",
-          "thunderbolt port type": "thunderbolt 4",
-          "hdmi type": "no hdmi",
-          "usb types supported": "usb type c",
-          "number of thunderbolt ports": "2",
-          "bluetooth supported": "yes",
-          "wifi specifications": "wi-fi 7, 802.11be 2x2",
-          "wi-fi supported": "yes",
-          "bluetooth specifications": "bluetooth 6.0",
-          "camera type": "webcam",
-          "camera resolution": "1080p",
-          "camera features": "12mp center stage camera, advanced image signal processor with computational video, desk view",
-          "type of keyboard": "backlit keyboard",
-          "keyboard configuration": "ambient light sensor, 78 (ansi) or 79 (iso) keys including 12 full-height function keys",
-          "type of mouse": "force touch trackpad",
-          "lock": "password | fingerprint",
-          "included software": "built-in apps",
-          "additional features": "apple intelligence, live translation, universal clipboard, live activities, markup and sketch, apple n1 wireless chip, 4 super cores and 6 efficiency cores, 8\u2011core gpu, neural accelerators, hardware-accelerated ray tracing, 16-core neural engine, 153gb/s memory bandwidth, media engine: video decode engine, prores encode and decode engine, av1 decode, thread networking technology, voiceover, zoom, motion, display and text settings, accessibility reader, voice control, switch control, closed captions, live captions, personal voice, live speech",
-          "battery type": "non-removable",
-          "battery technology": "lithium polymer",
-          "number of cells": "0",
-          "standard battery life": "up to 18 hours video streaming, upto 15 hours wireless web",
-          "fast charging capability": "yes",
-          "battery charge time": "charge 50% in just 30 minutes",
-          "additional charging features": "built-in 53.8 watt hour lithium polymer battery, 30w usb-c power adapter (included with m5 with 8-core gpu), fast-charge capable with 70w or higher usb pd power source",
-          "voltage rating": "100v - 240v ac",
-          "power pin type": "magsafe 3",
-          "frequency": "50hz - 60hz",
-          "body material": "aluminum",
-          "brand color": "midnight",
-          "documents": "1 x warranty card",
-          "main product": "1 x laptop u",
-          "accessories": "1 x 30w usb-c power adapter, 1 x usb-c to magsafe 3 cable (2m)",
-          "package includes": "1 x laptop, 1 x 30w usb-c power adapter, 1 x usb-c to magsafe 3 cable (2m), 1 x warranty card",
-          "generic name": "laptop",
-          "warranty on main product": "12 months",
-          "warranty type": "carry-in",
-          "standard warranty includes": "manufacturing defects",
-          "standard warranty excludes": "physical damage",
-          "warranty on accessories": "6 months",
-          "certification": "yes",
-          "energy star certification": "yes",
-          "certifications": "energy star certification",
-          "country of origin": "china",
-          "country of brand origin": "usa",
-          "processor": "apple m5",
-          "display": "34.46 cms (13.6 inches), liquid retina",
-          "memory": "16gb unified memory ram, 512gb ssd rom",
-          "os": "macos tahoe"
+          "weight_kg": 1.2,
+          "battery_wh": 52.0,
+          "wifi_standard": "wi-fi 6",
+          "model_number": "un.370si.002",
+          "warranty": "12 months"
         }
       },
       "offers": [
         {
           "source": "croma",
-          "source_product_id": "324343",
-          "source_url": "https://www.croma.com/apple-macbook-air-13-6-inch-m5-16gb-512gb-macos-tahoe-midnight-/p/324343?_price=13949000&_mrp=14990000",
-          "title": "Apple MacBook Air (13.6 inch, M5, 16GB, 512GB, macOS Tahoe, Midnight)",
-          "price_paise": 13949000,
-          "mrp_paise": 14990000,
+          "source_product_id": "323615",
+          "source_url": "https://www.croma.com/acer-aspire-5-intel-core-ultra-5-laptop-16gb-512gb-ssd-windows-11-home-14-inch-wuxga-ips-display-ms-office-silver-1-2-kg-/p/323615?_price=7299000&_mrp=9999900",
+          "title": "Acer Aspire 5 Intel Core Ultra 5 Laptop (16GB, 512GB SSD, Windows 11 Home, 14 inch WUXGA IPS Display, MS Office, Silver, 1.2 KG)",
+          "image_urls": [
+            "https://media.tatacroma.com/Croma%20Assets/Computers%20Peripherals/Laptop/Images/323615_0_uEVNRr5R8Y.png?updatedAt=1783326915036"
+          ],
+          "price_paise": 7299000,
+          "mrp_paise": 9999900,
           "coupon_price_paise": null,
           "in_stock": true,
           "seller": "Croma",
-          "rating": null,
-          "review_count": null,
+          "rating": 5.0,
+          "review_count": 1,
           "quality_status": "VALID",
           "quality_score": 100,
           "quality_flags": [],
-          "observed_at": "2026-09-04T18:08:35.411789Z"
+          "observed_at": "2026-09-23T15:21:53.505997Z"
         }
       ],
       "review_candidates": [],
-      "best_price_paise": 13949000,
+      "best_price_paise": 7299000,
       "best_source": "croma",
-      "max_price_paise": 13949000,
+      "max_price_paise": 7299000,
       "price_spread_paise": 0,
       "savings_paise": 0
     },
     {
-      "cluster_id": "clus_828aeae3adee9ad9",
+      "cluster_id": "clus_4d21294a826c23db",
       "category": "laptop",
       "brand": "asus",
       "model_name": "asus expertbook 32gb / 1024gb",
       "attributes": {
-        "ram_gb": 32,
         "storage_gb": 1024,
-        "storage_type": "ssd"
+        "storage_type": "SSD",
+        "mpn": "B9406CAA-TH1205WS"
       },
       "fingerprint": {
         "category": "laptop",
@@ -1014,20 +385,26 @@
         "storage_type": "ssd",
         "screen_size_inches": null,
         "gpu_model": null,
-        "manufacturer_part_number": null,
+        "manufacturer_part_number": "b9406caa-th1205ws",
         "gtin": null,
         "attributes": {
-          "ram_gb": 32,
-          "storage_gb": 1024,
-          "storage_type": "ssd"
+          "display_type": "oled"
         }
       },
       "offers": [
         {
           "source": "flipkart",
           "source_product_id": "itm8f6006a76d8bf",
-          "source_url": "https://www.flipkart.com/asus-expertbook-ultra-copilot-pc-intel-core-x7-358h-32-gb-1-tb-ssd-windows-11-home-b9406caa-th1205ws-thin-light-laptop/p/itm8f6006a76d8bf",
-          "title": "ASUS ExpertBook Ultra Copilot+ PC Intel Core Ultra X7 358H - (32 GB/1 TB SSD/Windows 11 Home) B9406CAA-TH1205WS Thin and Light Laptop Rs.449990  Price in India - Buy ASUS ExpertBook Ultra Copilot+ PC Intel Core Ultra X7 358H - (32 GB/1 TB SSD/Windows 11 Home) B9406CAA-TH1205WS Thin and Light Laptop Jet Fog Online - ASUS : Flipkart.com",
+          "source_url": "https://www.flipkart.com/asus-expertbook-ultra-full-metal-nano-ceramic-coating-toled-touchscreen-copilot-intel-core-x7-358h-32-gb-1-tb-ssd-windows-11-home-b9406caa-th1205ws-thin-light-laptop/p/itm8f6006a76d8bf",
+          "title": "ASUS ExpertBook Ultra Full Metal Nano Ceramic Coating, TOLED with Touchscreen Copilot Intel Core Ultra X7 358H - (32 GB/1 TB SSD/Windows 11 Home) B9406CAA-TH1205WS Thin and Light Laptop Rs.449990.0  Price in India - Buy ASUS ExpertBook Ultra Full Metal Nano Ceramic Coating, TOLED with Touchscreen Copilot Intel Core Ultra X7 358H - (32 GB/1 TB SSD/Windows 11 Home) B9406CAA-TH1205WS Thin and Light Laptop Jet Fog Online - ASUS : Flipkart.com",
+          "image_urls": [
+            "https://rukmini1.flixcart.com/image/1500/1500/xif0q/computer/f/f/t/-original-imahr5dsc2zzggjz.jpeg?q=70",
+            "https://rukmini1.flixcart.com/image/1500/1500/xif0q/computer/m/b/j/-original-imahpf3jz9sazgaj.jpeg?q=70",
+            "https://rukmini1.flixcart.com/image/1500/1500/xif0q/computer/2/v/o/-original-imahmpfsggydctkd.jpeg?q=70",
+            "https://rukmini1.flixcart.com/image/1500/1500/xif0q/computer/l/p/m/-original-imahmpfswgff5phu.jpeg?q=70",
+            "https://rukmini1.flixcart.com/image/1500/1500/xif0q/computer/y/d/g/-original-imahpf3j7jnzjgsg.jpeg?q=70",
+            "https://rukminim2.flixcart.com/image/1500/1500/xif0q/computer/f/f/t/-original-imahr5dsc2zzggjz.jpeg"
+          ],
           "price_paise": 27299000,
           "mrp_paise": null,
           "coupon_price_paise": null,
@@ -1038,7 +415,7 @@
           "quality_status": "VALID",
           "quality_score": 70,
           "quality_flags": [],
-          "observed_at": "2026-09-04T18:08:37.535609Z"
+          "observed_at": "2026-09-23T15:21:55.170251Z"
         }
       ],
       "review_candidates": [],
@@ -1049,5 +426,5 @@
       "savings_paise": 0
     }
   ],
-  "generated_at": "2026-09-04T18:08:37.582445Z"
+  "generated_at": "2026-09-23T15:21:55.202222Z"
 }

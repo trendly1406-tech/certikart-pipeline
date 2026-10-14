@@ -10,9 +10,12 @@ requires-python = ">=3.11"
 dependencies = [
     "alembic>=1.19.1",
     "arq>=0.28.0",
+    "boto3>=1.43.93",
     "curl-cffi>=0.16.2",
     "httpx[http2]>=0.28.1",
     "orjson>=3.12.0",
+    "pgvector>=0.5.0",
+    "pillow>=12.3.0",
     "playwright>=1.62.0",
     "prometheus-client>=0.26.0",
     "psycopg[binary]>=3.3.4",
@@ -32,6 +35,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "bandit>=1.9.4",
+    "boto3-stubs[s3]>=1.43.93",
     "hypothesis>=6.167.0",
     "mypy>=2.3.1",
     "pip-audit>=2.10.1",
@@ -48,7 +52,7 @@ package = false
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-src = ["src", "tests"]
+src = ["src", "tests", "migrations"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "C4", "PIE", "PT", "RUF", "SIM"]
@@ -61,6 +65,7 @@ known-first-party = [
     "matching",
     "normalization",
     "pricing",
+    "retrieval",
     "reviews",
     "sources",
     "storage",
@@ -71,7 +76,7 @@ known-first-party = [
 python_version = "3.11"
 strict = true
 plugins = ["pydantic.mypy"]
-files = ["src", "tests"]
+files = ["src", "tests", "migrations"]
 mypy_path = "src"
 explicit_package_bases = true
 warn_unreachable = true

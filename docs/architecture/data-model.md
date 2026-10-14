@@ -21,7 +21,13 @@ category
 
 ### Commercial & Telemetry Layer
 - **`offers`**: Live commercial terms for each store listing (`price_paise`, `mrp_paise`, `coupon_price_paise`, `in_stock`, `seller`, `rating`).
-- **`scrape_runs`**: Operational crawl telemetry tracking items discovered, parsed, persisted, and run duration.
+- **`product_import_runs`**: Durable status and progress for user-submitted product URL imports. Scheduled collection diagnostics are emitted through structured logs and collection reports instead of an unused per-run database table.
+
+### Semantic Retrieval Layer
+- **`product_documents`**: Stable, versioned projection of canonical decision fields. It excludes volatile offers and raw retailer HTML.
+- **`product_embeddings`**: Provider/model-specific pgvector value tied to the exact document content hash and canonical product ID.
+
+The managed Alembic chain creates the complete catalog on a fresh database and adopts compatible tables created by earlier development bootstrap. Production runs schema changes through `db-upgrade`; normal workers use migration mode and do not execute DDL.
 
 ---
 

@@ -530,15 +530,46 @@ class LaptopIdentityNormalizer:
             else None
         )
 
-        # Priority from extra_attributes if explicitly passed
-        if extra_attributes and "ram_gb" in extra_attributes:
-            with contextlib.suppress(ValueError):
-                ram_gb = int(str(extra_attributes["ram_gb"]))
-        if extra_attributes and "storage_gb" in extra_attributes:
-            with contextlib.suppress(ValueError):
-                storage_gb = int(str(extra_attributes["storage_gb"]))
-        if extra_attributes and "gpu_model" in extra_attributes:
-            gpu = str(extra_attributes["gpu_model"])
+        # Canonical parser fields take priority over title-derived values.
+        if extra_attributes:
+            if "ram_gb" in extra_attributes:
+                with contextlib.suppress(ValueError):
+                    ram_gb = int(str(extra_attributes["ram_gb"]))
+            if "storage_gb" in extra_attributes:
+                with contextlib.suppress(ValueError):
+                    storage_gb = int(str(extra_attributes["storage_gb"]))
+            if extra_attributes.get("cpu_model"):
+                chip = str(extra_attributes["cpu_model"])
+            if extra_attributes.get("gpu_model"):
+                gpu = str(extra_attributes["gpu_model"])
+            if (
+                "screen_size_inches" in extra_attributes
+                and extra_attributes["screen_size_inches"] is not None
+            ):
+                with contextlib.suppress(ValueError):
+                    screen_size = float(str(extra_attributes["screen_size_inches"]))
+            if extra_attributes.get("generation"):
+                generation = str(extra_attributes["generation"])
+            if extra_attributes.get("ram_type"):
+                ram_type = str(extra_attributes["ram_type"])
+            if extra_attributes.get("display_resolution"):
+                display_res = str(extra_attributes["display_resolution"])
+            if extra_attributes.get("display_type"):
+                display_type = str(extra_attributes["display_type"])
+            if "gpu_vram_gb" in extra_attributes:
+                with contextlib.suppress(ValueError):
+                    gpu_vram = int(str(extra_attributes["gpu_vram_gb"]))
+            if "weight_kg" in extra_attributes:
+                with contextlib.suppress(ValueError):
+                    weight_kg = float(str(extra_attributes["weight_kg"]))
+            if "battery_wh" in extra_attributes:
+                with contextlib.suppress(ValueError):
+                    battery_wh = float(str(extra_attributes["battery_wh"]))
+            if (
+                "keyboard_backlight" in extra_attributes
+                and extra_attributes["keyboard_backlight"] is not None
+            ):
+                backlight = bool(extra_attributes["keyboard_backlight"])
 
         # Build clean model name: [family] [screen_size] [chip]
         components: list[str] = []
@@ -581,6 +612,7 @@ class LaptopIdentityNormalizer:
         from sources.common import is_ignored_spec_key
 
         extra = {k: v for k, v in (extra_attributes or {}).items() if not is_ignored_spec_key(k)}
+        extra.pop("spec_sections", None)
         for explicit_k in (
             "ram_gb",
             "storage_gb",
@@ -632,6 +664,23 @@ class LaptopIdentityNormalizer:
         ):
             attributes["gpu_model"] = gpu
 
+        fingerprint_attributes = {
+            key: value
+            for key, value in attributes.items()
+            if key
+            not in {
+                "cpu_model",
+                "generation",
+                "gpu_model",
+                "gtin",
+                "mpn",
+                "ram_gb",
+                "screen_size_inches",
+                "storage_gb",
+                "storage_type",
+            }
+        }
+
         from matching.fingerprint import ProductFingerprint
 
         return ProductFingerprint(
@@ -648,7 +697,7 @@ class LaptopIdentityNormalizer:
             gpu_model=gpu,
             manufacturer_part_number=manufacturer_part_number,
             gtin=gtin,
-            attributes=attributes,
+            attributes=fingerprint_attributes,
         )
 
     @classmethod
