@@ -21,7 +21,10 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps { checkout scm }
+            steps {
+                checkout scm
+                script { env.DEPLOY_REVISION = sh(returnStdout: true, script: 'git rev-parse HEAD').trim() }
+            }
         }
         stage('Install and verify') {
             steps {
@@ -39,8 +42,8 @@ pipeline {
                     sh '''#!/bin/sh
                         set -eu
                         printf '%s' "$REGISTRY_TOKEN" | docker login ghcr.io --username "$REGISTRY_USER" --password-stdin
-                        docker build --pull --target runtime --tag "$IMAGE:$GIT_COMMIT" --tag "$IMAGE:main" .
-                        docker push "$IMAGE:$GIT_COMMIT"
+                        docker build --pull --target runtime --tag "$IMAGE:$DEPLOY_REVISION" --tag "$IMAGE:main" .
+                        docker push "$IMAGE:$DEPLOY_REVISION"
                         docker push "$IMAGE:main"
                         docker logout ghcr.io
                     '''
@@ -55,7 +58,7 @@ pipeline {
                     sh '''#!/bin/sh
                         set -eu
                         ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$DEPLOY_TARGET" \
-                          "migrate-catalog $GIT_COMMIT"
+                          "migrate-catalog $DEPLOY_REVISION"
                     '''
                 }
             }
@@ -69,7 +72,7 @@ pipeline {
                         set -eu
                         case "$COLLECTION_LIMIT" in *[!0-9]*|'') echo 'COLLECTION_LIMIT must be an integer' >&2; exit 2;; esac
                         ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$DEPLOY_TARGET" \
-                          "collect-catalog $GIT_COMMIT $COLLECTION_LIMIT"
+                          "collect-catalog $DEPLOY_REVISION $COLLECTION_LIMIT"
                     '''
                 }
             }
