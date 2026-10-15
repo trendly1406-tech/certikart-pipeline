@@ -42,7 +42,7 @@ pipeline {
                     sh '''#!/bin/sh
                         set -eu
                         printf '%s' "$REGISTRY_TOKEN" | docker login ghcr.io --username "$REGISTRY_USER" --password-stdin
-                        docker build --pull --target runtime --tag "$IMAGE:$DEPLOY_REVISION" --tag "$IMAGE:main" .
+                        DOCKER_BUILDKIT=1 docker build --pull --target runtime --tag "$IMAGE:$DEPLOY_REVISION" --tag "$IMAGE:main" .
                         docker push "$IMAGE:$DEPLOY_REVISION"
                         docker push "$IMAGE:main"
                         docker logout ghcr.io
