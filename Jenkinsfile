@@ -25,7 +25,7 @@ pipeline {
         }
         stage('Install and verify') {
             steps {
-                sh 'uv sync --frozen --all-groups'
+                sh 'uv sync --frozen --all-groups --python 3.11'
                 sh 'make format-check'
                 sh 'make lint'
                 sh 'make typecheck'
