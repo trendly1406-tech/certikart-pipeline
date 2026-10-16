@@ -54,10 +54,13 @@ pipeline {
             when { allOf { branch 'main'; expression { params.RUN_CATALOG_MIGRATIONS } } }
             steps {
                 input message: 'Apply the pipeline-owned catalog migrations to the configured database?', ok: 'Apply migrations'
-                sshagent(credentials: ['certikart-deploy-ssh']) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'certikart-deploy-ssh', keyFileVariable: 'DEPLOY_KEY')]) {
                     sh '''#!/bin/sh
                         set -eu
-                        ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$DEPLOY_TARGET" \
+                        install -d -m 700 "$HOME/.ssh"
+                        printf '%s\n' '161.118.177.85 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwc3phzATiwH9Jr8Tzv1wYyrRrqwuSejMgQyLK3bl0g' > "$HOME/.ssh/known_hosts"
+                        chmod 600 "$HOME/.ssh/known_hosts"
+                        ssh -i "$DEPLOY_KEY" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes "$DEPLOY_TARGET" \
                           "migrate-catalog $DEPLOY_REVISION"
                     '''
                 }
@@ -67,11 +70,14 @@ pipeline {
             when { allOf { branch 'main'; expression { params.RUN_COLLECTION } } }
             steps {
                 input message: "Collect up to ${params.COLLECTION_LIMIT} products per retailer for mobile and laptop, then persist to the catalog?", ok: 'Run collection'
-                sshagent(credentials: ['certikart-deploy-ssh']) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'certikart-deploy-ssh', keyFileVariable: 'DEPLOY_KEY')]) {
                     sh '''#!/bin/sh
                         set -eu
                         case "$COLLECTION_LIMIT" in *[!0-9]*|'') echo 'COLLECTION_LIMIT must be an integer' >&2; exit 2;; esac
-                        ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$DEPLOY_TARGET" \
+                        install -d -m 700 "$HOME/.ssh"
+                        printf '%s\n' '161.118.177.85 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwc3phzATiwH9Jr8Tzv1wYyrRrqwuSejMgQyLK3bl0g' > "$HOME/.ssh/known_hosts"
+                        chmod 600 "$HOME/.ssh/known_hosts"
+                        ssh -i "$DEPLOY_KEY" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes "$DEPLOY_TARGET" \
                           "collect-catalog $DEPLOY_REVISION $COLLECTION_LIMIT"
                     '''
                 }
